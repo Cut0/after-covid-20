@@ -1,18 +1,18 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
-  </div>
+  <div class="home"></div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
-
-@Component({
-  components: {
-    HelloWorld
+import { reactive, SetupContext, defineComponent } from '@vue/composition-api'
+export default defineComponent({
+  setup(_, context: SetupContext) {
+    const state = reactive({ tabs: { memo: null } })
+    return {
+      state,
+      navigateTo(path: string) {
+        if (path !== context.root.$route.path) context.root.$router.push(path)
+      }
+    }
   }
 })
-export default class Home extends Vue {}
 </script>
