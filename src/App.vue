@@ -3,8 +3,7 @@
     navigation-drawer
     application-bar
     v-main
-      v-container(color="#68B787")
-        router-view
+      router-view
     navigation-bar
 </template>
 

@@ -35,7 +35,9 @@ export default defineComponent({
 .notification-body > .notification-title
   margin: 8px 0px
 .notification-content
+  margin-right: 56px
   white-space: pre-line
+  word-break: break-all
 .icon-wrapper
   width: 40px
   height: 40px
