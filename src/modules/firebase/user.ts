@@ -9,13 +9,19 @@ export default () => {
   async function get() {
     console.log('user情報取得')
   }
+
   async function create() {
     console.log('user作成')
+  }
+
+  async function remove() {
+    console.log('user削除')
   }
 
   return {
     ...toRefs(state),
     get,
-    create
+    create,
+    remove
   }
 }

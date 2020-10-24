@@ -1,8 +1,20 @@
 <template lang="pug">
-  .notifications 通知
+  .notifications
+    notification-list(:notifications="notifications")
 </template>
 
 <script lang="ts">
 import { reactive, SetupContext, defineComponent } from '@vue/composition-api'
-export default defineComponent({})
+import NotificationList from '@/templates/NotificationList.vue'
+import NotificationComponent from '@/modules/firebase/notification'
+export default defineComponent({
+  components: { NotificationList },
+  setup(_, ctx) {
+    const notificationComponent = NotificationComponent()
+    notificationComponent.getAll()
+    return {
+      ...notificationComponent
+    }
+  }
+})
 </script>
