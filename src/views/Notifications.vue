@@ -1,5 +1,5 @@
 <template lang="pug">
-  .home ホーム
+  .notifications 通知
 </template>
 
 <script lang="ts">

@@ -1,5 +1,5 @@
 <template lang="pug">
-  .home ホーム
+  .search 検索
 </template>
 
 <script lang="ts">

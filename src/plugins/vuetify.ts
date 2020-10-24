@@ -5,7 +5,12 @@ import {
   mdiMagnify,
   mdiBell,
   mdiCogOutline,
-  mdiVirusOutline
+  mdiVirusOutline,
+  mdiGoogle,
+  mdiTwitter,
+  mdiFacebook,
+  mdiLogout,
+  mdiExitRun
 } from '@mdi/js'
 Vue.use(Vuetify)
 
@@ -16,8 +21,13 @@ export default new Vuetify({
       home: mdiHomeOutline,
       search: mdiMagnify,
       notification: mdiBell,
-      setting: mdiCogOutline,
-      virus: mdiVirusOutline
+      config: mdiCogOutline,
+      virus: mdiVirusOutline,
+      google: mdiGoogle,
+      twitter: mdiTwitter,
+      facebook: mdiFacebook,
+      logout: mdiLogout,
+      exit: mdiExitRun
     }
   },
   theme: { dark: false }
