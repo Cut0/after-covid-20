@@ -27,6 +27,7 @@ v-row(no-gutters justify="center")
               v-icon $exit
             v-list-item-content
               v-list-item-title 退会する
+          p {{currentUser}}
       confirm-dialog(
         ref="logout"
         title="ログアウトしますか？" content="再度ログインする際にはアカウントによる認証が必要となります。")

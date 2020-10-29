@@ -1,6 +1,7 @@
 import * as firebase from 'firebase'
 import 'firebase/firestore'
 import { User } from '@/types'
+import store from '@/store'
 
 export default class MemoModel {
   db: firebase.firestore.Firestore
@@ -40,15 +41,8 @@ export default class MemoModel {
       .delete()
   }
 
-  public async currentData() {
-    const user = {}
-    await firebase.auth().onAuthStateChanged(user => {
-      user = user ? user : null
-    })
-
-    return new Promise(resolve => {
-      resolve({ data: user })
-    })
+  public currentData() {
+    return store.getters.currentUser
   }
 
   public async signIn(provider: any) {

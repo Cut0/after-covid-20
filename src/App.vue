@@ -12,6 +12,7 @@ import { reactive, SetupContext, defineComponent } from '@vue/composition-api'
 import ApplicationBar from '@/components/ApplicationBar.vue'
 import NavigationBar from '@/components/NavigationBar.vue'
 import NavigationDrawer from '@/components/NavigationDrawer.vue'
+import * as firebase from 'firebase'
 export default defineComponent({
   components: { ApplicationBar, NavigationBar, NavigationDrawer }
 })
