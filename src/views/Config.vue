@@ -36,17 +36,20 @@ v-row(no-gutters justify="center")
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+import { defineComponent, reactive, provide } from '@vue/composition-api'
 import ConfirmDialog from '@/components/modals/ConfirmModal.vue'
+import UserComponent from '@/modules/firebase/user'
 export default defineComponent({
   components: { ConfirmDialog },
   setup() {
+    const userComponent = UserComponent()
     const logins = {
       google: {
         icon: '$google',
         content: 'Googleアカウントでログイン',
         event: () => {
           console.log('google')
+          userComponent.signInWithGoogle()
         }
       },
       twitter: {
@@ -54,6 +57,7 @@ export default defineComponent({
         content: 'Twitterアカウントでログイン',
         event: () => {
           console.log('twitter')
+          userComponent.signInWithTwitter()
         }
       },
       facebook: {
@@ -61,12 +65,14 @@ export default defineComponent({
         content: 'Facebookアカウントでログイン',
         event: () => {
           console.log('facebook')
+          userComponent.signInWithFacebook()
         }
       }
     }
     const state = reactive({ logins })
     return {
       state,
+      ...userComponent,
       sendEmail(email: string) {
         console.log(email)
       },

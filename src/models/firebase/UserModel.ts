@@ -1,4 +1,4 @@
-import * as firebase from 'firebase/app'
+import * as firebase from 'firebase'
 import 'firebase/firestore'
 import { User } from '@/types'
 
@@ -52,7 +52,7 @@ export default class MemoModel {
   }
 
   public async signIn(provider: any) {
-    await firebase.auth().signInWithPopup(provider)
+    return firebase.auth().signInWithPopup(provider)
   }
 
   public async signOut() {
