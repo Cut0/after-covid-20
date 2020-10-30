@@ -6,6 +6,7 @@ import store from './store'
 import './plugins/composition-api'
 import './plugins/firebase'
 import './plugins/auth'
+import './plugins/storage'
 import './registerServiceWorker'
 
 Vue.config.productionTip = false

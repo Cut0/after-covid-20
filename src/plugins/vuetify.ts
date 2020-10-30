@@ -10,7 +10,17 @@ import {
   mdiTwitter,
   mdiFacebook,
   mdiLogout,
-  mdiExitRun
+  mdiExitRun,
+  mdiImage,
+  mdiPencil,
+  mdiClose,
+  mdiAccountCircle,
+  mdiPlus,
+  mdiDelete,
+  mdiStar,
+  mdiStarOutline,
+  mdiStarHalfFull,
+  mdiCloudUploadOutline
 } from '@mdi/js'
 Vue.use(Vuetify)
 
@@ -27,7 +37,17 @@ export default new Vuetify({
       twitter: mdiTwitter,
       facebook: mdiFacebook,
       logout: mdiLogout,
-      exit: mdiExitRun
+      exit: mdiExitRun,
+      image: mdiImage,
+      edit: mdiPencil,
+      close: mdiClose,
+      account: mdiAccountCircle,
+      plus: mdiPlus,
+      delete: mdiDelete,
+      star: mdiStar,
+      starOutline: mdiStarOutline,
+      starHalf: mdiStarHalfFull,
+      upload: mdiCloudUploadOutline
     }
   },
   theme: { dark: false }

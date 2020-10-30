@@ -7,4 +7,24 @@
       v-icon(v-if="$route.name==='設定'") $config
     v-toolbar-title {{this.$route.name}}
     v-spacer
+    v-avatar(size="36")
+      template(v-if="isLogin")
+        v-img(:src="currentUser.photoURL")
+      template(v-else)
+        v-icon $account
 </template>
+<script lang="ts">
+import { SetupContext, defineComponent } from '@vue/composition-api'
+import UserComponent from '@/modules/firebase/user'
+export default defineComponent({
+  setup(_, context: SetupContext) {
+    const userComponent = UserComponent()
+    return {
+      ...userComponent,
+      navigateTo(path: string) {
+        if (path !== context.root.$route.path) context.root.$router.push(path)
+      }
+    }
+  }
+})
+</script>

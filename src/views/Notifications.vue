@@ -1,5 +1,6 @@
 <template lang="pug">
-  .notifications
+v-row(justify="center" no-gutters)  
+  v-responsive(max-width="598" width="375")
     loading-circle(v-if="loading")
     notification-list(
       v-else

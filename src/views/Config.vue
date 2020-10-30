@@ -28,20 +28,21 @@ v-row(no-gutters justify="center")
             v-list-item-content
               v-list-item-title 退会する
           p {{currentUser}}
-      confirm-dialog(
+      confirm-modal(
         ref="logout"
-        title="ログアウトしますか？" content="再度ログインする際にはアカウントによる認証が必要となります。")
-      confirm-dialog(
+        title="ログアウトしますか？" content="再度ログインする際にはアカウントによる認証が必要となります。"
+        @ok="signOut")
+      confirm-modal(
         ref="withdrawal"
         title="退会しますか？" content="退会した場合今までのデータは全て削除され、復元できなくなります。")
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, provide } from '@vue/composition-api'
-import ConfirmDialog from '@/components/modals/ConfirmModal.vue'
+import { defineComponent, reactive } from '@vue/composition-api'
+import ConfirmModal from '@/components/modals/ConfirmModal.vue'
 import UserComponent from '@/modules/firebase/user'
 export default defineComponent({
-  components: { ConfirmDialog },
+  components: { ConfirmModal },
   setup() {
     const userComponent = UserComponent()
     const logins = {

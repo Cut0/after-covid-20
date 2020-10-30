@@ -8,20 +8,20 @@ export default new Vuex.Store({
     user: {} as firebase.User | null
   },
   mutations: {
-    setUser: function(state, user) {
+    setUser: (state, user) => {
       state.isLogin = true
       state.user = user
     },
-    removeUser(state) {
+    removeUser: state => {
       state.isLogin = false
       state.user = {} as firebase.User | null
     }
   },
   actions: {
-    setUser: function(store, user) {
+    setUser: (store, user) => {
       store.commit('setUser', user)
     },
-    removeUser: function(store) {
+    removeUser: store => {
       store.commit('removeUser')
     }
   },

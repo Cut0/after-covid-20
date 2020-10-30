@@ -1,31 +1,36 @@
 import { computed, reactive, toRefs } from '@vue/composition-api'
-import firebase from 'firebase'
 import UserModel from '@/models/firebase/UserModel'
 import { User } from '@/types'
 
 export default () => {
   const state = reactive({
     loading: false,
-    isLogin: false,
-    user: {} as firebase.User | null
+    isLogin: false
   })
 
   function signInWithGoogle() {
     if (state.loading) return
-    const provider = new firebase.auth.GoogleAuthProvider()
-    new UserModel().signIn(provider)
+    new UserModel().signInWithGoogle()
   }
 
   function signInWithTwitter() {
     if (state.loading) return
-    const provider = new firebase.auth.TwitterAuthProvider()
-    new UserModel().signIn(provider)
+    new UserModel().signInWithTwitter()
   }
 
   function signInWithFacebook() {
     if (state.loading) return
-    const provider = new firebase.auth.FacebookAuthProvider()
-    new UserModel().signIn(provider)
+    new UserModel().signInWithFacebook()
+  }
+
+  function signOut() {
+    if (state.loading) return
+    new UserModel().signOut()
+  }
+
+  function isLogin() {
+    if (state.loading) return
+    return new UserModel().isLogin()
   }
 
   function currentUser() {
@@ -50,12 +55,14 @@ export default () => {
 
   return {
     ...toRefs(state),
+    isLogin: computed(() => isLogin()),
     currentUser: computed(() => currentUser()),
     get,
     create,
     remove,
     signInWithGoogle,
     signInWithTwitter,
-    signInWithFacebook
+    signInWithFacebook,
+    signOut
   }
 }

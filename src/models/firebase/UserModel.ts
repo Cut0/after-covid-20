@@ -41,11 +41,26 @@ export default class MemoModel {
       .delete()
   }
 
+  public isLogin() {
+    return store.getters.isLogin
+  }
+
   public currentData() {
     return store.getters.currentUser
   }
 
-  public async signIn(provider: any) {
+  public async signInWithGoogle() {
+    const provider = new firebase.auth.GoogleAuthProvider()
+    return firebase.auth().signInWithPopup(provider)
+  }
+
+  public async signInWithTwitter() {
+    const provider = new firebase.auth.TwitterAuthProvider()
+    return firebase.auth().signInWithPopup(provider)
+  }
+
+  public async signInWithFacebook() {
+    const provider = new firebase.auth.FacebookAuthProvider()
     return firebase.auth().signInWithPopup(provider)
   }
 
