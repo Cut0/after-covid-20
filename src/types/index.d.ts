@@ -5,11 +5,10 @@ export type User = {
   snsId: string
 }
 
-export type Spot = {
-  count: number
-  point: number
-  category: string
-  name: string
+export type Item = {
+  id: string
+  uid: string
+  imageURL: string
 }
 
 export type Notification = {

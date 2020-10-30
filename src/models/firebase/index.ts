@@ -1,3 +1,4 @@
 import NotificationModel from './NotificationModel'
 import UserModel from './UserModel'
-export { NotificationModel, UserModel }
+import ItemModel from './ItemModel'
+export { NotificationModel, UserModel, ItemModel }
