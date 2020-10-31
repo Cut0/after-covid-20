@@ -12,19 +12,42 @@ v-row(justify="center" no-gutters)
         v-icon $edit
       v-btn(fab='' dark='' small='' color='#ff7f50')
         v-icon $delete
-  image-modal(ref="itemAdder")
+  image-modal(
+    @ok="createItem($event)"
+    ref="itemAdder")
 </template>
 <script lang="ts">
 import { reactive, defineComponent } from '@vue/composition-api'
 import ImageModal from '@/components/modals/ImageModal.vue'
+import ItemComponetnt from '@/modules/firebase/item'
+import UserComponent from '@/modules/firebase/user'
 export default defineComponent({
   components: { ImageModal },
   setup() {
     const state = reactive({
       fab: false
     })
+    const itemComponent = ItemComponetnt()
+    const userComponent = UserComponent()
     return {
-      state
+      state,
+      ...itemComponent,
+      createItem(data: {
+        imageUrl: string
+        itemType: string
+        hangerCode: string
+      }) {
+        itemComponent.create(
+          {
+            id: '',
+            uid: userComponent.currentUser.value.uid,
+            imagePath: '',
+            itemType: data.itemType,
+            hangerCode: data.hangerCode
+          },
+          data.imageUrl
+        )
+      }
     }
   }
 })

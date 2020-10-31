@@ -8,7 +8,9 @@ export type User = {
 export type Item = {
   id: string
   uid: string
-  imageURL: string
+  imagePath: string
+  itemType: string
+  hangerCode: string
 }
 
 export type Notification = {

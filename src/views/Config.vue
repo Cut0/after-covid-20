@@ -74,13 +74,7 @@ export default defineComponent({
     const state = reactive({ logins })
     return {
       state,
-      ...userComponent,
-      sendEmail(email: string) {
-        console.log(email)
-      },
-      sendPassword(password: string) {
-        console.log(password)
-      }
+      ...userComponent
     }
   }
 })

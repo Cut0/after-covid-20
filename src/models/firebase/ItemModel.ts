@@ -4,8 +4,10 @@ import { Item } from '@/types'
 
 export default class ItemModel {
   db: firebase.firestore.Firestore
+  storage: firebase.storage.Storage
   constructor() {
     this.db = firebase.firestore()
+    this.storage = firebase.storage()
   }
 
   public async get(id: string) {
@@ -55,13 +57,19 @@ export default class ItemModel {
     })
   }
 
-  public async create(data: Item) {
+  public async create(data: Item, imageUrl: string) {
     const id = this.db.collection('items').doc().id
+    const imagePath = data.uid + '/' + id
+    const ref = this.storage.ref().child(imagePath)
     data.id = id
-    return await this.db
-      .collection('items')
-      .doc(id)
-      .set(data)
+    data.imagePath = imagePath
+    return await Promise.all([
+      this.db
+        .collection('items')
+        .doc(id)
+        .set(data),
+      ref.putString(imageUrl)
+    ])
   }
 
   public async update(data: Item) {

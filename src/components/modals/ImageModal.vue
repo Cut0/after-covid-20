@@ -5,7 +5,7 @@
     width="400")
     v-card.mx-auto
       v-img.image-preview(
-        :src="state.uploadImageUrl"
+        :src="state.imageUrl"
         alt="モーダルのヘッダー"
         class="white--text align-end"
         height="200px"
@@ -14,7 +14,7 @@
             align="center"
             justify="center")
             v-icon(
-              v-if="!state.uploadImageUrl"
+              v-if="!state.imageUrl"
               x-large) $upload
       input.image-input#image-input(
         type="file"
@@ -47,10 +47,10 @@
       v-card-actions
         v-spacer
         v-btn(
-          @click="buttonClicked('cancel')"
+          @click="cancel"
           color="#68B787" text) キャンセル
         v-btn(
-          @click="buttonClicked('ok')"
+          @click="ok"
           color="#68B787" text) 決定
 </template>
 <script lang="ts">
@@ -62,11 +62,11 @@ export default defineComponent({
       rate: 3,
       itemType: '',
       hangerCode: '',
-      uploadImageUrl: ''
+      imageUrl: ''
     })
 
     function stateReset() {
-      state.uploadImageUrl = ''
+      state.imageUrl = ''
       state.itemType = ''
       state.hangerCode = ''
       state.rate = 3
@@ -88,16 +88,25 @@ export default defineComponent({
           const fr = new FileReader()
           fr.readAsDataURL(file)
           fr.addEventListener('load', () => {
-            state.uploadImageUrl = fr.result as string
+            state.imageUrl = fr.result as string
           })
-        } else state.uploadImageUrl = ''
+        } else state.imageUrl = ''
       },
       open() {
         state.isOpened = true
       },
-      buttonClicked(name: string) {
+      ok() {
         state.isOpened = false
-        context.emit(name)
+        context.emit('ok', {
+          imageUrl: state.imageUrl,
+          itemType: state.itemType,
+          hangerCode: state.hangerCode
+        })
+        stateReset()
+      },
+      cancel() {
+        state.isOpened = false
+        context.emit('cancel')
         stateReset()
       }
     }

@@ -34,7 +34,6 @@ export default () => {
   }
 
   function currentUser() {
-    if (state.loading) return
     return new UserModel().currentData()
   }
 

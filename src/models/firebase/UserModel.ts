@@ -46,7 +46,7 @@ export default class MemoModel {
   }
 
   public currentData() {
-    return store.getters.currentUser
+    return store.getters.currentUser as firebase.User
   }
 
   public async signInWithGoogle() {

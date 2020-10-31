@@ -68,10 +68,10 @@ export default () => {
     })
   }
 
-  async function create(data: Item) {
+  async function create(data: Item, imageUrl: string) {
     if (state.loading) return
     console.log('item作成')
-    return new ItemModel().create(data)
+    return new ItemModel().create(data, imageUrl)
   }
 
   async function update(data: Item) {
