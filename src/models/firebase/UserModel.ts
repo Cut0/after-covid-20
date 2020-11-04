@@ -9,17 +9,6 @@ export default class MemoModel {
     this.db = firebase.firestore()
   }
 
-  public async create(user: User) {
-    await this.db.collection('users').add(user)
-  }
-
-  public async update(id: string, user: User) {
-    await this.db
-      .collection('users')
-      .doc(id)
-      .update(user)
-  }
-
   public async get(id: string) {
     let user: any = undefined
     await this.db
@@ -34,19 +23,66 @@ export default class MemoModel {
     })
   }
 
+  public async getList({ limit = 20, offset = 0 }) {
+    const users: firebase.firestore.DocumentData = []
+    await this.db
+      .collection('users')
+      .startAt(offset)
+      .limit(limit)
+      .get()
+      .then(el => {
+        el.forEach(doc => {
+          users.push(doc.data())
+        })
+      })
+    return new Promise(resolve => {
+      resolve({ data: users })
+    })
+  }
+
+  public async getAll() {
+    const users: firebase.firestore.DocumentData = []
+    await this.db
+      .collection('users')
+      .get()
+      .then(el => {
+        el.forEach(doc => {
+          const user = doc.data()
+          users.push(user)
+        })
+      })
+    return new Promise(resolve => {
+      resolve({ data: users })
+    })
+  }
+
+  public async update(user: User) {
+    return this.db
+      .collection('users')
+      .doc(user.id)
+      .update(user)
+      .then(() => {
+        store.dispatch('setUser', user)
+      })
+  }
+  /*
   public async remove(id: string) {
     await this.db
       .collection('users')
       .doc(id)
       .delete()
+      .then(() => {
+        store.dispatch('removeUser')
+      })
   }
 
+  */
   public isLogin() {
-    return store.getters.isLogin
+    return store.getters.isLogin as boolean
   }
 
   public currentData() {
-    return store.getters.currentUser as firebase.User
+    return store.getters.currentUser as User
   }
 
   public async signInWithGoogle() {

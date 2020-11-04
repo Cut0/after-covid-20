@@ -1,17 +1,18 @@
 <template lang="pug">
   v-dialog(
     v-model="state.isOpened"
+    persistent
     max-width="290")
     v-card
-      v-card-title.headline {{title}}
+      v-card-title {{title}}
       v-card-text {{content}}
       v-card-actions
         v-spacer
         v-btn(
-          @click="buttonClicked('cancel')"
+          @click="cancel"
           color="#68B787" text) キャンセル
         v-btn(
-          @click="buttonClicked('ok')"
+          @click="ok"
           color="#68B787" text) 決定
 </template>
 
@@ -37,9 +38,13 @@ export default defineComponent({
       open() {
         state.isOpened = true
       },
-      buttonClicked(name: string) {
+      ok() {
         state.isOpened = false
-        context.emit(name)
+        context.emit('ok')
+      },
+      cancel() {
+        state.isOpened = false
+        context.emit('cancel')
       }
     }
   }

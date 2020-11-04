@@ -1,16 +1,27 @@
 export type User = {
+  id: string
+  photoURL: string | null
+  displayName: string | null
+  petCode: string | null
+  petName: string | null
+  level: number
   point: number
-  currentSpotId: number
-  snsType: string
-  snsId: string
+  isWorking: boolean
+  monthlyTime: number
+  monthlyPoint: number
+  weeklyTime: number
+  weeklyPoint: number
+  dailyTime: number
+  dailyPoint: number
+  isComplated: boolean
 }
 
-export type Item = {
+export type Log = {
   id: string
   uid: string
-  imagePath: string
-  itemType: string
-  hangerCode: string
+  date: Date
+  time: number
+  point: number
 }
 
 export type Notification = {

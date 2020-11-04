@@ -5,7 +5,6 @@ import {
   mdiMagnify,
   mdiBell,
   mdiCogOutline,
-  mdiVirusOutline,
   mdiGoogle,
   mdiTwitter,
   mdiFacebook,
@@ -20,7 +19,8 @@ import {
   mdiStar,
   mdiStarOutline,
   mdiStarHalfFull,
-  mdiCloudUploadOutline
+  mdiCloudUploadOutline,
+  mdiCrownOutline
 } from '@mdi/js'
 Vue.use(Vuetify)
 
@@ -32,7 +32,6 @@ export default new Vuetify({
       search: mdiMagnify,
       notification: mdiBell,
       config: mdiCogOutline,
-      virus: mdiVirusOutline,
       google: mdiGoogle,
       twitter: mdiTwitter,
       facebook: mdiFacebook,
@@ -47,7 +46,8 @@ export default new Vuetify({
       star: mdiStar,
       starOutline: mdiStarOutline,
       starHalf: mdiStarHalfFull,
-      upload: mdiCloudUploadOutline
+      upload: mdiCloudUploadOutline,
+      crown: mdiCrownOutline
     }
   },
   theme: { dark: false }

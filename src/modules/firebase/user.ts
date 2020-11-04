@@ -1,26 +1,55 @@
 import { computed, reactive, toRefs } from '@vue/composition-api'
 import UserModel from '@/models/firebase/UserModel'
-import { User } from '@/types'
+import { StateChanger, User } from '@/types'
 
 export default () => {
+  const perPage = 20
+  let cursor = 0
+  let isLast = false
   const state = reactive({
     loading: false,
-    isLogin: false
+    isLogin: false,
+    user: {} as User,
+    users: [] as User[],
+    identifier: 1
   })
+
+  async function reset() {
+    state.users = []
+    cursor = 0
+    isLast = false
+    state.identifier++
+  }
+
+  function createQuery() {
+    return {
+      offset: cursor,
+      limit: cursor + perPage - 1
+    }
+  }
 
   function signInWithGoogle() {
     if (state.loading) return
-    new UserModel().signInWithGoogle()
+    state.loading = true
+    return new UserModel().signInWithGoogle().finally(() => {
+      state.loading = false
+    })
   }
 
   function signInWithTwitter() {
     if (state.loading) return
-    new UserModel().signInWithTwitter()
+    state.loading = true
+    return new UserModel().signInWithTwitter().finally(() => {
+      state.loading = false
+    })
   }
 
   function signInWithFacebook() {
     if (state.loading) return
-    new UserModel().signInWithFacebook()
+    state.loading = true
+    return new UserModel().signInWithFacebook().finally(() => {
+      state.loading = false
+    })
   }
 
   function signOut() {
@@ -42,9 +71,45 @@ export default () => {
     console.log('user情報取得')
   }
 
-  async function create() {
+  async function getList() {
+    if (isLast || state.loading) return
+    state.loading = true
+    return new UserModel()
+      .getList(createQuery())
+      .then((res: any) => {
+        state.users.push(...res.data)
+      })
+      .finally(() => {
+        state.loading = false
+      })
+  }
+
+  async function infiniteHandler($state: StateChanger) {
+    await getList()
+    if (isLast) {
+      $state.complete(!state.users.length)
+    } else {
+      $state.loaded()
+    }
+    cursor += perPage
+  }
+
+  async function getAll() {
+    if (isLast || state.loading) return
+    state.loading = true
+    return new UserModel()
+      .getAll()
+      .then((res: any) => {
+        state.users.push(...res.data)
+      })
+      .finally(() => {
+        state.loading = false
+      })
+  }
+
+  async function update() {
     if (state.loading) return
-    console.log('user作成')
+    console.log('user更新')
   }
 
   async function remove() {
@@ -56,9 +121,8 @@ export default () => {
     ...toRefs(state),
     isLogin: computed(() => isLogin()),
     currentUser: computed(() => currentUser()),
-    get,
-    create,
-    remove,
+    getList,
+    getAll,
     signInWithGoogle,
     signInWithTwitter,
     signInWithFacebook,

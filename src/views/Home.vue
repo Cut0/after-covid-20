@@ -1,52 +1,51 @@
 <template lang="pug">
 v-row(justify="center" no-gutters)  
   v-responsive(max-width="598" width="375")
-    v-speed-dial.floating-action-button(v-model="state.fab" fixed bottom right transition="slide-y-reverse-transition")
-      template(v-slot:activator='')
-        v-btn(v-model='state.fab' color="#2e8b57" dark='' fab='')
-          v-icon(v-if='state.fab') $close
-          v-icon(v-else='') $account
-      v-btn(fab='' dark='' small='' color='#f0e68c' @click="$refs.itemAdder.open()")
-        v-icon $plus
-      v-btn(fab='' dark='' small='' color='#4682b4')
-        v-icon $edit
-      v-btn(fab='' dark='' small='' color='#ff7f50')
-        v-icon $delete
-  image-modal(
-    @ok="createItem($event)"
-    ref="itemAdder")
+    template(v-if="!loading")
+      general-card(
+        v-if="!isLogin"
+        title="ログインしませんか？" 
+        content="ログインすることで全てのサービスを利用することができます。一緒にヘルスケアを頑張りましょう！！"
+        buttonName="ログインページへ"
+        @ok="toConfig")
+      register-card(
+        v-if="!currentUser.isComplated"
+        title="クッションを登録" 
+        content="これから一緒に働くパートナーです。しっかりと名前をつけてあげましょう"
+        buttonName="登録"
+        @ok="toConfig")
+      v-speed-dial.floating-action-button(v-model="state.fab" fixed bottom right transition="slide-y-reverse-transition")
+        template(v-slot:activator='')
+          v-btn(v-model='state.fab' color="#2e8b57" dark='' fab='')
+            v-icon(v-if='state.fab') $close
+            v-icon(v-else='') $account
+        v-btn(fab='' dark='' small='' color='#f0e68c' @click="$refs.itemAdder.open()")
+          v-icon $plus
+        v-btn(fab='' dark='' small='' color='#4682b4')
+          v-icon $edit
+        v-btn(fab='' dark='' small='' color='#ff7f50')
+          v-icon $delete
 </template>
 <script lang="ts">
-import { reactive, defineComponent } from '@vue/composition-api'
-import ImageModal from '@/components/modals/ImageModal.vue'
-import ItemComponetnt from '@/modules/firebase/item'
+import { reactive, defineComponent, SetupContext } from '@vue/composition-api'
 import UserComponent from '@/modules/firebase/user'
+import GeneralCard from '@/components/cards/GeneralCard.vue'
+import RegisterCard from '@/components/cards/RegisterCard.vue'
+import { Tips } from '@/mixins'
 export default defineComponent({
-  components: { ImageModal },
-  setup() {
+  components: { GeneralCard, RegisterCard },
+  setup(_, ctx: SetupContext) {
+    const userComponent = UserComponent()
+
     const state = reactive({
       fab: false
     })
-    const itemComponent = ItemComponetnt()
-    const userComponent = UserComponent()
+
     return {
       state,
-      ...itemComponent,
-      createItem(data: {
-        imageUrl: string
-        itemType: string
-        hangerCode: string
-      }) {
-        itemComponent.create(
-          {
-            id: '',
-            uid: userComponent.currentUser.value.uid,
-            imagePath: '',
-            itemType: data.itemType,
-            hangerCode: data.hangerCode
-          },
-          data.imageUrl
-        )
+      ...userComponent,
+      toConfig() {
+        Tips.navigateTo(ctx, '/config')
       }
     }
   }

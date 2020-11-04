@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { User } from '@/types'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     isLogin: false,
-    user: {} as firebase.User | null
+    user: {} as User | null
   },
   mutations: {
     setUser: (state, user) => {
@@ -14,7 +15,7 @@ export default new Vuex.Store({
     },
     removeUser: state => {
       state.isLogin = false
-      state.user = {} as firebase.User | null
+      state.user = {} as User | null
     }
   },
   actions: {
