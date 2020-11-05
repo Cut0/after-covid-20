@@ -6,6 +6,7 @@ export type User = {
   petName: string | null
   level: number
   point: number
+  time: number
   isWorking: boolean
   monthlyTime: number
   monthlyPoint: number

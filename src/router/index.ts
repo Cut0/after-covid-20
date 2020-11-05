@@ -2,22 +2,19 @@ import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '@/views/Home.vue'
 import Search from '@/views/Search.vue'
+import Ranking from '@/views/Ranking.vue'
 import Notifications from '@/views/Notifications.vue'
 import Config from '@/views/Config.vue'
+import User from '@/views/User.vue'
 import UserComponent from '@/modules/firebase/user'
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   {
-    path: '/search',
-    name: '検索',
-    component: Search
-  },
-  {
     path: '/ranking',
     name: 'ランキング',
-    component: Search
+    component: Ranking
   },
   {
     path: '/notifications',
@@ -30,14 +27,14 @@ const routes: Array<RouteConfig> = [
     component: Config
   },
   {
-    path: '/home',
+    path: '/',
     name: 'ホーム',
     component: Home
   },
   {
     path: '/:id',
     name: 'ユーザー',
-    component: Config
+    component: User
   }
 ]
 

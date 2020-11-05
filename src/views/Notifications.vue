@@ -23,3 +23,7 @@ export default defineComponent({
   }
 })
 </script>
+<style lang="sass">
+.list-wrapper
+  overflow: scroll
+</style>

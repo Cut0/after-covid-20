@@ -17,16 +17,11 @@
             v-list-item-title ログインしましょう
       v-divider
       v-list-item-group(aria-label="ページ遷移用")
-        v-list-item(@click="to('/home')" role="option")
+        v-list-item(@click="to('/')" role="option")
           v-list-item-icon
             v-icon  $home
           v-list-item-content
             v-list-item-title ホーム
-        v-list-item(@click="to('/search')" role="option")
-          v-list-item-icon
-            v-icon  $search
-          v-list-item-content
-            v-list-item-title 検索
         v-list-item(@click="to('/ranking')" role="option")
           v-list-item-icon
             v-icon  $crown

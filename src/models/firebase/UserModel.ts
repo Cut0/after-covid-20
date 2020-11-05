@@ -56,6 +56,13 @@ export default class MemoModel {
     })
   }
 
+  public async create(user: User) {
+    return this.db
+      .collection('users')
+      .doc(user.id)
+      .set(user)
+  }
+
   public async update(user: User) {
     return this.db
       .collection('users')
@@ -87,20 +94,95 @@ export default class MemoModel {
 
   public async signInWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider()
-    return firebase.auth().signInWithPopup(provider)
+    const res = await firebase.auth().signInWithPopup(provider)
+    if (res.user) {
+      const userData: any = await this.get(res.user?.uid)
+      if (userData.data) store.dispatch('setUser', userData.data)
+      else {
+        this.create({
+          id: res.user.uid,
+          photoURL: res.user.photoURL,
+          displayName: res.user.displayName,
+          petCode: null,
+          petName: null,
+          level: 0,
+          point: 0,
+          time: 0,
+          isWorking: false,
+          monthlyTime: 0,
+          monthlyPoint: 0,
+          weeklyTime: 0,
+          weeklyPoint: 0,
+          dailyTime: 0,
+          dailyPoint: 0,
+          isComplated: false
+        })
+      }
+    }
+    return
   }
 
   public async signInWithTwitter() {
     const provider = new firebase.auth.TwitterAuthProvider()
-    return firebase.auth().signInWithPopup(provider)
+    const res = await firebase.auth().signInWithPopup(provider)
+    if (res.user) {
+      const userData: any = await this.get(res.user?.uid)
+      if (userData.data) store.dispatch('setUser', userData.data)
+      else {
+        this.create({
+          id: res.user.uid,
+          photoURL: res.user.photoURL,
+          displayName: res.user.displayName,
+          petCode: null,
+          petName: null,
+          level: 0,
+          point: 0,
+          time: 0,
+          isWorking: false,
+          monthlyTime: 0,
+          monthlyPoint: 0,
+          weeklyTime: 0,
+          weeklyPoint: 0,
+          dailyTime: 0,
+          dailyPoint: 0,
+          isComplated: false
+        })
+      }
+    }
+    return
   }
 
   public async signInWithFacebook() {
     const provider = new firebase.auth.FacebookAuthProvider()
-    return firebase.auth().signInWithPopup(provider)
+    const res = await firebase.auth().signInWithPopup(provider)
+    if (res.user) {
+      const userData: any = await this.get(res.user?.uid)
+      if (userData.data) store.dispatch('setUser', userData.data)
+      else {
+        this.create({
+          id: res.user.uid,
+          photoURL: res.user.photoURL,
+          displayName: res.user.displayName,
+          petCode: null,
+          petName: null,
+          level: 0,
+          point: 0,
+          time: 0,
+          isWorking: false,
+          monthlyTime: 0,
+          monthlyPoint: 0,
+          weeklyTime: 0,
+          weeklyPoint: 0,
+          dailyTime: 0,
+          dailyPoint: 0,
+          isComplated: false
+        })
+      }
+    }
+    return
   }
 
   public async signOut() {
-    firebase.auth().signOut()
+    store.dispatch('removeUser')
   }
 }

@@ -21,9 +21,11 @@ export default new Vuex.Store({
   actions: {
     setUser: (store, user) => {
       store.commit('setUser', user)
+      localStorage.setItem('userId', user.id)
     },
     removeUser: store => {
       store.commit('removeUser')
+      localStorage.removeItem('userId')
     }
   },
   getters: {

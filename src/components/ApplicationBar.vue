@@ -2,7 +2,6 @@
   v-app-bar(color="#68B787" app fixed collapse-on-scroll dark)
     v-app-bar-nav-icon(aria-label="ページアイコン")
       v-icon(v-if="$route.name==='ホーム'") $home
-      v-icon(v-if="$route.name==='検索'") $search
       v-icon(v-if="$route.name==='ランキング'") $crown
       v-icon(v-if="$route.name==='通知一覧'") $notification
       v-icon(v-if="$route.name==='設定'") $config
@@ -13,14 +12,28 @@
         v-img(:src="currentUser.photoURL")
       template(v-else)
         v-icon $account
+    template(
+        v-if="($route.name==='ランキング')"
+        v-slot:extension)
+        v-tabs(
+          v-model="rankingTab"
+          fixed-tabs centered)
+          v-tab(key="0") レベル
+          v-tab(key="1") 経験値
+          v-tab(key="2") 労働時間
 </template>
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, watch, ref, SetupContext } from '@vue/composition-api'
 import UserComponent from '@/modules/firebase/user'
 export default defineComponent({
-  setup() {
+  setup(_, ctx: SetupContext) {
+    const rankingTab = ref({})
+    watch(rankingTab, value => {
+      ctx.emit('rankingTab', value)
+    })
     const userComponent = UserComponent()
     return {
+      rankingTab,
       ...userComponent
     }
   }
