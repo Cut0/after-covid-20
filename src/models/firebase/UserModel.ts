@@ -23,10 +23,11 @@ export default class MemoModel {
     })
   }
 
-  public async getList({ limit = 20, offset = 0 }) {
+  public async getList({ limit = 20, offset = 0 }, sortkey = 'id') {
     const users: firebase.firestore.DocumentData = []
     await this.db
       .collection('users')
+      .orderBy(sortkey, 'desc')
       .startAt(offset)
       .limit(limit)
       .get()
@@ -40,10 +41,11 @@ export default class MemoModel {
     })
   }
 
-  public async getAll() {
+  public async getAll(sortkey = 'id') {
     const users: firebase.firestore.DocumentData = []
     await this.db
       .collection('users')
+      .orderBy(sortkey, 'desc')
       .get()
       .then(el => {
         el.forEach(doc => {

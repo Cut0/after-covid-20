@@ -50,9 +50,10 @@ router.beforeEach((to, from, next) => {
     to.name === 'ユーザー' &&
     userComponent.isLogin &&
     to.params.id === userComponent.currentUser.value.id
-  )
+  ) {
+    console.log(to.params.id)
     next({ name: 'ホーム' })
-  else next()
+  } else next()
 })
 
 export default router

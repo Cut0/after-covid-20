@@ -9,7 +9,7 @@ v-row(justify="center" no-gutters)
         buttonName="ログインページへ"
         @ok="toConfig")
       register-card(
-        v-if="!currentUser.isComplated"
+        v-if="isLogin&&!currentUser.isComplated"
         title="クッションを登録" 
         content="これから一緒に働くパートナーです。しっかりと名前をつけてあげましょう"
         buttonName="登録"
@@ -52,25 +52,6 @@ export default defineComponent({
 })
 </script>
 <style scoped lang="sass">
-.v-card
-  min-height: calc(100vh - 120px)
-.img-wrapper
-  width: 100px
-  height: 100px
-  position: relative
-  border-radius: 50%
-  background-color: grey
-.img-wrapper > img
-  position: absolute
-  top: 50%
-  left: 50%
-  width: 100px
-  height: 100px
-  object-fit: cover
-  transform: translate(-50%, -50%)
-  -webkit-transform: translate(-50%, -50%)
-  -ms-transform: translate(-50%, -50%)
-  border-radius: 50%
 .floating-action-button
   margin-bottom: 64px
 </style>

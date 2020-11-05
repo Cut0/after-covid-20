@@ -20,7 +20,9 @@ import {
   mdiStarOutline,
   mdiStarHalfFull,
   mdiCloudUploadOutline,
-  mdiCrownOutline
+  mdiCrownOutline,
+  mdiSchoolOutline,
+  mdiAlphaPCircleOutline
 } from '@mdi/js'
 Vue.use(Vuetify)
 
@@ -47,7 +49,9 @@ export default new Vuetify({
       starOutline: mdiStarOutline,
       starHalf: mdiStarHalfFull,
       upload: mdiCloudUploadOutline,
-      crown: mdiCrownOutline
+      crown: mdiCrownOutline,
+      working: mdiSchoolOutline,
+      point: mdiAlphaPCircleOutline
     }
   },
   theme: { dark: false }

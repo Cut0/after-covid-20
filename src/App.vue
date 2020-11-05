@@ -25,3 +25,11 @@ export default defineComponent({
   }
 })
 </script>
+<style lang="sass">
+.v-main
+  padding-bottom: 56px !important
+.v-input
+  max-width: 600px !important
+.v-toolbar__content
+  justify-content: center
+</style>

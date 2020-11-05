@@ -3,7 +3,7 @@
       @click="clicked" 
       max-width="598")
       v-list-item-icon(v-if="showRank")
-        v-list-item-title {{rank}}
+        v-list-item-title.mx-4 {{rank}}
         v-avatar(size="48").mx-4
           v-img(:src="img" alt="ユーザープロフィール" loading="lazy")
       v-list-item-content

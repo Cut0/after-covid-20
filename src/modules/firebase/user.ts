@@ -71,11 +71,11 @@ export default () => {
     console.log('user情報取得')
   }
 
-  async function getList() {
+  async function getList(sortKey = 'id') {
     if (isLast || state.loading) return
     state.loading = true
     return new UserModel()
-      .getList(createQuery())
+      .getList(createQuery(), sortKey)
       .then((res: any) => {
         state.users.push(...res.data)
       })
@@ -94,11 +94,11 @@ export default () => {
     cursor += perPage
   }
 
-  async function getAll() {
+  async function getAll(sortkey = 'id') {
     if (isLast || state.loading) return
     state.loading = true
     return new UserModel()
-      .getAll()
+      .getAll(sortkey)
       .then((res: any) => {
         state.users.push(...res.data)
       })
@@ -121,6 +121,7 @@ export default () => {
     ...toRefs(state),
     isLogin: computed(() => isLogin()),
     currentUser: computed(() => currentUser()),
+    reset,
     getList,
     getAll,
     signInWithGoogle,

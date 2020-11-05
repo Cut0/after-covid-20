@@ -27,6 +27,13 @@ v-row(no-gutters justify="center")
               v-icon $exit
             v-list-item-content
               v-list-item-title 退会する
+      template(v-if="!loading")
+        register-card(
+          v-if="isLogin&&currentUser.isComplated"
+          title="クッションを再設定" 
+          content="名前を変えちゃいます"
+          buttonName="登録"
+          @ok="console.log()")
       confirm-modal(
         ref="logout"
         title="ログアウトしますか？" content="再度ログインする際にはアカウントによる認証が必要となります。"
@@ -40,8 +47,9 @@ v-row(no-gutters justify="center")
 import { defineComponent, reactive } from '@vue/composition-api'
 import ConfirmModal from '@/components/modals/ConfirmModal.vue'
 import UserComponent from '@/modules/firebase/user'
+import RegisterCard from '@/components/cards/RegisterCard.vue'
 export default defineComponent({
-  components: { ConfirmModal },
+  components: { ConfirmModal, RegisterCard },
   setup() {
     const userComponent = UserComponent()
     const logins = {

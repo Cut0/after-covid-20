@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-container
+  v-container.px-1.pl-3
     v-card
       v-card-title {{title}}
       v-card-text {{content}}

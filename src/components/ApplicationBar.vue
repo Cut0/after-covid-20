@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-app-bar(color="#68B787" app fixed collapse-on-scroll dark)
+  v-app-bar(color="#68B787" app fixed dark)
     v-app-bar-nav-icon(aria-label="ページアイコン")
       v-icon(v-if="$route.name==='ホーム'") $home
       v-icon(v-if="$route.name==='ランキング'") $crown
@@ -18,9 +18,10 @@
         v-tabs(
           v-model="rankingTab"
           fixed-tabs centered)
-          v-tab(key="0") レベル
-          v-tab(key="1") 経験値
-          v-tab(key="2") 労働時間
+          v-tab(key="0") 本日
+          v-tab(key="1") 週間
+          v-tab(key="2") 月間
+          v-tab(key="3") 累計
 </template>
 <script lang="ts">
 import { defineComponent, watch, ref, SetupContext } from '@vue/composition-api'
