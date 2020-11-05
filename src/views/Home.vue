@@ -13,7 +13,7 @@ v-row(justify="center" no-gutters)
         title="クッションを登録" 
         content="これから一緒に働くパートナーです。しっかりと名前をつけてあげましょう"
         buttonName="登録"
-        @ok="toConfig")
+        @ok="registerPet")
       v-speed-dial.floating-action-button(v-model="state.fab" fixed bottom right transition="slide-y-reverse-transition")
         template(v-slot:activator='')
           v-btn(v-model='state.fab' color="#2e8b57" dark='' fab='')
@@ -36,16 +36,21 @@ export default defineComponent({
   components: { GeneralCard, RegisterCard },
   setup(_, ctx: SetupContext) {
     const userComponent = UserComponent()
-
     const state = reactive({
       fab: false
     })
-
     return {
       state,
       ...userComponent,
       toConfig() {
         Tips.navigateTo(ctx, '/config')
+      },
+      registerPet({ name, code }: { name: string; code: string }) {
+        const currentUser = userComponent.currentUser.value
+        currentUser.petName = name
+        currentUser.petCode = code
+        currentUser.isComplated = true
+        userComponent.update(currentUser)
       }
     }
   }

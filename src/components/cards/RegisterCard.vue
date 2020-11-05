@@ -61,8 +61,8 @@ export default defineComponent({
       state,
       hasError,
       ok() {
-        if (!hasError) {
-          ctx.emit('ok')
+        if (!hasError.value) {
+          ctx.emit('ok', { name: state.name, code: state.code })
         }
       }
     }

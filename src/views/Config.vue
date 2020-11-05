@@ -33,7 +33,7 @@ v-row(no-gutters justify="center")
           title="クッションを再設定" 
           content="名前を変えちゃいます"
           buttonName="登録"
-          @ok="console.log()")
+          @ok="registerPet")
       confirm-modal(
         ref="logout"
         title="ログアウトしますか？" content="再度ログインする際にはアカウントによる認証が必要となります。"
@@ -81,7 +81,14 @@ export default defineComponent({
     const state = reactive({ logins })
     return {
       state,
-      ...userComponent
+      ...userComponent,
+      registerPet({ name, code }: { name: string; code: string }) {
+        const currentUser = userComponent.currentUser.value
+        currentUser.petName = name
+        currentUser.petCode = code
+        currentUser.isComplated = true
+        userComponent.update(currentUser)
+      }
     }
   }
 })

@@ -1,9 +1,13 @@
 <template lang="pug">
   v-app(color="#49337D")
     navigation-drawer
-    application-bar(@rankingTab="setRankingTab")
+    application-bar(
+      @rankingTab="setRankingTab"
+      @homeTab="setHomeTab")
     v-main
-      router-view(:ranking-tab="state.rankingTab")
+      router-view(
+        :ranking-tab="state.rankingTab"
+        :home-tab="state.homeTab")
     navigation-bar
 </template>
 
@@ -15,11 +19,17 @@ import NavigationDrawer from '@/components/NavigationDrawer.vue'
 export default defineComponent({
   components: { ApplicationBar, NavigationBar, NavigationDrawer },
   setup() {
-    const state = reactive({ rankingTab: 0 })
+    const state = reactive({
+      rankingTab: 0,
+      homeTab: 0
+    })
     return {
       state,
       setRankingTab(value: number) {
         state.rankingTab = value
+      },
+      setHomeTab(value: number) {
+        state.homeTab = value
       }
     }
   }

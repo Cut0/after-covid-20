@@ -13,7 +13,7 @@
       template(v-else)
         v-icon $account
     template(
-        v-if="($route.name==='ランキング')"
+        v-if="$route.name==='ランキング'"
         v-slot:extension)
         v-tabs(
           v-model="rankingTab"
@@ -22,18 +22,31 @@
           v-tab(key="1") 週間
           v-tab(key="2") 月間
           v-tab(key="3") 累計
+    template(
+        v-if="$route.name==='ホーム'&&isLogin&&currentUser.isComplated"
+        v-slot:extension)
+        v-tabs(
+          v-model="homeTab"
+          fixed-tabs centered)
+          v-tab(key="0") {{currentUser.petName}}
+          v-tab(key="1") グラフ
 </template>
 <script lang="ts">
 import { defineComponent, watch, ref, SetupContext } from '@vue/composition-api'
 import UserComponent from '@/modules/firebase/user'
 export default defineComponent({
   setup(_, ctx: SetupContext) {
+    const homeTab = ref({})
+    watch(homeTab, value => {
+      ctx.emit('homeTab', value)
+    })
     const rankingTab = ref({})
     watch(rankingTab, value => {
       ctx.emit('rankingTab', value)
     })
     const userComponent = UserComponent()
     return {
+      homeTab,
       rankingTab,
       ...userComponent
     }

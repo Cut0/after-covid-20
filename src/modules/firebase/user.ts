@@ -54,7 +54,7 @@ export default () => {
 
   function signOut() {
     if (state.loading) return
-    new UserModel().signOut()
+    return new UserModel().signOut()
   }
 
   function isLogin() {
@@ -107,9 +107,9 @@ export default () => {
       })
   }
 
-  async function update() {
+  async function update(user: User) {
     if (state.loading) return
-    console.log('user更新')
+    return new UserModel().update(user)
   }
 
   async function remove() {
@@ -127,6 +127,7 @@ export default () => {
     signInWithGoogle,
     signInWithTwitter,
     signInWithFacebook,
-    signOut
+    signOut,
+    update
   }
 }
