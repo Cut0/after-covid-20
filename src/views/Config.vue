@@ -13,6 +13,14 @@ v-row(no-gutters justify="center")
             v-list-item-content
               v-list-item-title {{el.content}}
           v-list-item(
+            v-if="isLogin&&currentUser.isComplated"
+            @click="$refs.register.open()"
+            max-width="598")
+            v-list-item-icon
+              v-icon $reset
+            v-list-item-content
+              v-list-item-title クッションの再設定
+          v-list-item(
             @click="$refs.logout.open()"
             max-width="598")
             v-list-item-icon
@@ -27,13 +35,6 @@ v-row(no-gutters justify="center")
               v-icon $exit
             v-list-item-content
               v-list-item-title 退会する
-      template(v-if="!loading")
-        register-card(
-          v-if="isLogin&&currentUser.isComplated"
-          title="クッションを再設定" 
-          content="名前を変えちゃいます"
-          buttonName="登録"
-          @ok="registerPet")
       confirm-modal(
         ref="logout"
         title="ログアウトしますか？" content="再度ログインする際にはアカウントによる認証が必要となります。"
@@ -41,15 +42,22 @@ v-row(no-gutters justify="center")
       confirm-modal(
         ref="withdrawal"
         title="退会しますか？" content="退会した場合今までのデータは全て削除され、復元できなくなります。")
+      register-modal(
+        ref="register"
+        title="クッションを再設定" 
+        content="名前を変えちゃいます"
+        buttonName="登録"
+        @ok="registerPet"
+      )
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive } from '@vue/composition-api'
 import ConfirmModal from '@/components/modals/ConfirmModal.vue'
+import RegisterModal from '@/components/modals/RegisterModal.vue'
 import UserComponent from '@/modules/firebase/user'
-import RegisterCard from '@/components/cards/RegisterCard.vue'
 export default defineComponent({
-  components: { ConfirmModal, RegisterCard },
+  components: { ConfirmModal, RegisterModal },
   setup() {
     const userComponent = UserComponent()
     const logins = {

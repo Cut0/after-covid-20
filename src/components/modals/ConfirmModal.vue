@@ -1,7 +1,6 @@
 <template lang="pug">
   v-dialog(
     v-model="state.isOpened"
-    persistent
     max-width="290")
     v-card
       v-card-title {{title}}

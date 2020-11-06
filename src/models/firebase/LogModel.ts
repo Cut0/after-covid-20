@@ -17,7 +17,10 @@ export default class LogModel {
       .doc(id)
       .get()
       .then(doc => {
-        log = doc.exists ? doc.data() : null
+        if (doc.exists) {
+          log = doc.data()
+          log.date = log.date.toDate()
+        }
       })
     return new Promise(resolve => {
       resolve({ data: log })
@@ -34,35 +37,40 @@ export default class LogModel {
       .get()
       .then(el => {
         el.forEach(doc => {
-          logs.push(doc.data())
+          const log = doc.data()
+          log.date = log.date.toDate()
+          logs.push(log)
         })
       })
+    logs.sort((a: any, b: any) => (a.date < b.date ? 1 : -1))
     return new Promise(resolve => {
       resolve({ data: logs })
     })
   }
 
   public async getAll(uid: string) {
-    const Logs: firebase.firestore.DocumentData = []
+    const logs: firebase.firestore.DocumentData = []
     await this.db
       .collection('logs')
       .where('uid', '==', uid)
       .get()
       .then(el => {
         el.forEach(doc => {
-          const Log = doc.data()
-          Logs.push(Log)
+          const log = doc.data()
+          log.date = log.date.toDate()
+          logs.push(log)
         })
       })
+    logs.sort((a: any, b: any) => (a.date > b.date ? 1 : -1))
     return new Promise(resolve => {
-      resolve({ data: Logs })
+      resolve({ data: logs })
     })
   }
   /*
   public async create(data: Log) {
     return this.db.collection('logs').add(data)
   }
-  
+
   public async update(data: Log) {
     return await this.db
       .collection('Logs')

@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-list()
+  v-list
     v-list-item-group(:color="color")
       user-item(
         v-for="(el,index) in userData"

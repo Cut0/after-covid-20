@@ -23,6 +23,7 @@ export type Log = {
   date: Date
   time: number
   point: number
+  level: number
 }
 
 export type Notification = {

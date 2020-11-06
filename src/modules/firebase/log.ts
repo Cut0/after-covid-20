@@ -80,6 +80,7 @@ export default () => {
   return {
     ...toRefs(state),
     get,
-    getAll
+    getAll,
+    reset
   }
 }

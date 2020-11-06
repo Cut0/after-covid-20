@@ -13,23 +13,22 @@
       template(v-else)
         v-icon $account
     template(
-        v-if="$route.name==='ランキング'"
+        v-if="($route.name==='ランキング')||($route.name==='ホーム'&&isLogin&&currentUser.isComplated)"
         v-slot:extension)
         v-tabs(
+          v-if="$route.name==='ホーム'&&isLogin&&currentUser.isComplated"
+          v-model="homeTab"
+          fixed-tabs centered)
+          v-tab(key="0") クッション
+          v-tab(key="1") グラフ
+        v-tabs(
+          v-if="$route.name==='ランキング'"
           v-model="rankingTab"
           fixed-tabs centered)
           v-tab(key="0") 本日
           v-tab(key="1") 週間
           v-tab(key="2") 月間
           v-tab(key="3") 累計
-    template(
-        v-if="$route.name==='ホーム'&&isLogin&&currentUser.isComplated"
-        v-slot:extension)
-        v-tabs(
-          v-model="homeTab"
-          fixed-tabs centered)
-          v-tab(key="0") {{currentUser.petName}}
-          v-tab(key="1") グラフ
 </template>
 <script lang="ts">
 import { defineComponent, watch, ref, SetupContext } from '@vue/composition-api'
@@ -44,6 +43,13 @@ export default defineComponent({
     watch(rankingTab, value => {
       ctx.emit('rankingTab', value)
     })
+    watch(
+      () => ctx.root.$route,
+      () => {
+        homeTab.value = 0
+        rankingTab.value = 0
+      }
+    )
     const userComponent = UserComponent()
     return {
       homeTab,

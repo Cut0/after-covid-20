@@ -73,7 +73,7 @@ export default defineComponent({
     const userComponent = UserComponent()
     watch(
       () => props.rankingTab,
-      value => {
+      async value => {
         userComponent.reset()
         const sortKey = fields[value][state.sortType.name].name
         state.contentKey = sortKey
@@ -83,7 +83,7 @@ export default defineComponent({
     )
     watch(
       () => state.sortType,
-      value => {
+      async value => {
         userComponent.reset()
         const sortKey = fields[props.rankingTab][value.name].name
         state.contentKey = sortKey
