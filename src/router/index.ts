@@ -12,7 +12,7 @@ Vue.use(VueRouter)
 const routes: Array<RouteConfig> = [
   {
     path: '/ranking',
-    name: 'トップ100',
+    name: 'ランキング',
     component: Ranking
   },
   {

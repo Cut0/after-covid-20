@@ -26,7 +26,7 @@
           v-list-item-icon
             v-icon  $crown
           v-list-item-content
-            v-list-item-title トップ100
+            v-list-item-title ランキング
         v-list-item(@click="to('/notifications')" role="option")
           v-list-item-icon
             v-icon  $notification

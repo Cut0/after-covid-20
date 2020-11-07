@@ -3,7 +3,6 @@ import Vuetify from 'vuetify/lib'
 import {
   mdiHomeOutline,
   mdiMagnify,
-  mdiBell,
   mdiCogOutline,
   mdiGoogle,
   mdiTwitter,
@@ -24,7 +23,8 @@ import {
   mdiSchoolOutline,
   mdiAlphaPCircleOutline,
   mdiLockReset,
-  mdiArmFlexOutline
+  mdiArmFlexOutline,
+  mdiBellOutline
 } from '@mdi/js'
 Vue.use(Vuetify)
 
@@ -34,7 +34,7 @@ export default new Vuetify({
     values: {
       home: mdiHomeOutline,
       search: mdiMagnify,
-      notification: mdiBell,
+      notification: mdiBellOutline,
       config: mdiCogOutline,
       google: mdiGoogle,
       twitter: mdiTwitter,
