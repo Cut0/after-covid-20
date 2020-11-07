@@ -1,2 +1,3 @@
-import Tips from './Tips'
-export { Tips }
+import ToolTips from './Tips'
+import DateTips from './Date'
+export { ToolTips, DateTips }

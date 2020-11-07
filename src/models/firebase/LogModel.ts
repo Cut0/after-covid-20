@@ -4,10 +4,8 @@ import { Log } from '@/types'
 
 export default class LogModel {
   db: firebase.firestore.Firestore
-  storage: firebase.storage.Storage
   constructor() {
     this.db = firebase.firestore()
-    this.storage = firebase.storage()
   }
 
   public async get(id: string) {
@@ -27,13 +25,16 @@ export default class LogModel {
     })
   }
 
-  public async getList(uid: string, { limit = 20, offset = 0 }) {
+  public async getList(uid: string, query: { startDate: Date; endDate: Date }) {
     const logs: firebase.firestore.DocumentData = []
+    const startDate = firebase.firestore.Timestamp.fromDate(query.startDate)
+    const endDate = firebase.firestore.Timestamp.fromDate(query.endDate)
     await this.db
       .collection('logs')
       .where('uid', '==', uid)
-      .startAt(offset)
-      .limit(limit)
+      .orderBy('date')
+      .startAt(startDate)
+      .endBefore(endDate)
       .get()
       .then(el => {
         el.forEach(doc => {
@@ -42,7 +43,6 @@ export default class LogModel {
           logs.push(log)
         })
       })
-    logs.sort((a: any, b: any) => (a.date < b.date ? 1 : -1))
     return new Promise(resolve => {
       resolve({ data: logs })
     })

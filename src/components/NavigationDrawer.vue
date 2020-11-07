@@ -41,14 +41,14 @@
 <script lang="ts">
 import { SetupContext, defineComponent } from '@vue/composition-api'
 import UserComponent from '@/modules/firebase/user'
-import { Tips } from '@/mixins'
+import { ToolTips } from '@/mixins'
 export default defineComponent({
   setup(_, ctx: SetupContext) {
     const userComponent = UserComponent()
     return {
       ...userComponent,
       to(path: string) {
-        Tips.navigateTo(ctx, path)
+        ToolTips.navigateTo(ctx, path)
       }
     }
   }

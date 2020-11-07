@@ -20,12 +20,23 @@ v-row(justify="center" no-gutters)
           v-tab-item(key="1")
             v-container.pl-3
               v-row.pl-3.my-2(align="center")
-                v-icon $point
-                span.title.ml-1 ポイントの変動
-              transition(
-                :params="state.logs"
-                graphKey="point"
-                color="#FF9800")
+                v-icon(v-if="state.graphType.key==='point'") $point
+                v-icon(v-if="state.graphType.key==='time'") $working
+                span.title.ml-1 {{state.graphType.title}}の変動
+              transition(:chartData="state.logs")
+    v-speed-dial.floating-action-button(
+      v-if="homeTab===1"
+      v-model="state.fab" fixed bottom right transition="slide-y-reverse-transition")
+        template(v-slot:activator="")
+          v-btn(v-model="state.fab" :color="state.graphType.color" dark="" fab="")
+            v-icon(v-if="state.fab") $close
+            template(v-else)
+              v-icon(v-if="state.graphType.key==='point'") $point
+              v-icon(v-if="state.graphType.key==='time'") $working
+        v-btn(@click="setGraphType({title:'経験値',key:'point',color:'#ff7f50'})" fab='' dark='' small='' color='#ff7f50')
+          v-icon $point
+        v-btn(@click="setGraphType({title:'労働時間',key:'time',color:'#4682b4'})" fab='' dark='' small='' color='#4682b4')
+          v-icon $working
 </template>
 <script lang="ts">
 import {
@@ -39,76 +50,106 @@ import LogComponent from '@/modules/firebase/log'
 import GeneralCard from '@/components/cards/GeneralCard.vue'
 import RegisterCard from '@/components/cards/RegisterCard.vue'
 import Transition from '@/components/graphs/SingleTransition.vue'
-import { Tips } from '@/mixins'
-import log from '@/modules/firebase/log'
+import { DateTips, ToolTips } from '@/mixins'
+import { Tooltip } from 'chart.js'
+
 type Props = {
   homeTab: number
 }
-type GraphLog = {
-  label: string
+
+type GraphType = {
+  title: string
+  key: string
   color: string
-  date: string
-  point: string
-  level: string
-  time: string
 }
 
-function formatLogs(uid: string) {
+async function formatLogs(uid: string, graphType: GraphType) {
+  const labels: string[] = []
+  const datasets = [
+    {
+      label: graphType.title,
+      lineTension: 0,
+      borderColor: graphType.color,
+      data: [] as string[]
+    }
+  ]
+  DateTips.repeatMonth(new Date(), (date: Date) => {
+    datasets[0].data.push('0')
+    labels.push(DateTips.toStr(date))
+  })
+
   const logComponent = LogComponent()
-  const logs = [] as GraphLog[]
-  Tips.repeatMonth(new Date(), (date: Date) => {
-    logs.push({
-      label: 'ログ',
-      color: '#8BC34A',
-      date: Tips.toStr(date),
-      point: '0',
-      level: '0',
-      time: '0'
-    })
+  logComponent.reset()
+  const startDate = DateTips.FirstDateInYear
+  const endDate = DateTips.LastDateInYear
+  await logComponent.getList(uid, { startDate, endDate }).then(() => {
+    switch (graphType.key) {
+      case 'point':
+        logComponent.logList.value.map(el => {
+          datasets[0].data[el.date.getDate() - 1] = (
+            el.point + Number(datasets[0].data[el.date.getDate() - 1])
+          ).toString()
+        })
+        break
+      case 'time':
+        logComponent.logList.value.map(el => {
+          datasets[0].data[el.date.getDate() - 1] = (
+            el.time + Number(datasets[0].data[el.date.getDate() - 1])
+          ).toString()
+        })
+        break
+      case 'level':
+        logComponent.logList.value.map(el => {
+          datasets[0].data[el.date.getDate() - 1] = el.level.toString()
+        })
+        break
+    }
   })
-  logComponent.getAll(uid).then(() => {
-    logComponent.logList.value.map(el => {
-      logs[el.date.getDate() - 1].level = el.level.toString()
-      logs[el.date.getDate() - 1].point = (
-        el.point + Number(logs[el.date.getDate() - 1].point)
-      ).toString()
-      logs[el.date.getDate() - 1].time = (
-        el.time + Number(logs[el.date.getDate() - 1].time)
-      ).toString()
-    })
-  })
-  return logs
+  return { labels, datasets }
 }
 
 export default defineComponent({
   components: { GeneralCard, RegisterCard, Transition },
   props: {
-    homeTab: {
-      type: Number
-    }
+    homeTab: { type: Number }
   },
   setup(props: Props, ctx: SetupContext) {
     const state = reactive({
       fab: false,
-      logs: [] as GraphLog[]
+      graphType: { title: '経験値', key: 'point', color: '#ff7f50' },
+      logs: {}
     })
     const userComponent = UserComponent()
     watch(userComponent.isLogin, async val => {
-      if (val) state.logs = formatLogs(userComponent.currentUser.value.id)
+      if (val) {
+        formatLogs(userComponent.currentUser.value.id, state.graphType).then(
+          res => (state.logs = res)
+        )
+      }
     })
     watch(
       () => props.homeTab,
-      async val => {
-        if (val === 1)
-          state.logs = formatLogs(userComponent.currentUser.value.id)
+      val => {
+        if (val === 1) {
+          formatLogs(userComponent.currentUser.value.id, state.graphType).then(
+            res => (state.logs = res)
+          )
+        }
       }
     )
-
+    watch(
+      () => state.graphType,
+      () => {
+        formatLogs(userComponent.currentUser.value.id, state.graphType).then(
+          res => (state.logs = res)
+        )
+      }
+    )
     return {
       state,
       ...userComponent,
       toConfig() {
-        Tips.navigateTo(ctx, '/config')
+        ToolTips.navigateTo(ctx, '/config')
       },
       registerPet({ name, code }: { name: string; code: string }) {
         const currentUser = userComponent.currentUser.value
@@ -116,6 +157,9 @@ export default defineComponent({
         currentUser.petCode = code
         currentUser.isComplated = true
         userComponent.update(currentUser)
+      },
+      setGraphType(data: GraphType) {
+        state.graphType = data
       }
     }
   }
