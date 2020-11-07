@@ -20,22 +20,22 @@ v-row(justify="center" no-gutters)
           v-tab-item(key="1")
             v-container.pl-3
               v-row.pl-3.my-2(align="center")
-                v-icon(v-if="state.graphType.key==='point'") $point
-                v-icon(v-if="state.graphType.key==='time'") $working
-                span.title.ml-1 {{state.graphType.title}}の変動
-              transition(:chartData="monthlyGraphLog")
+                v-icon(v-if="state.chartType.key==='point'") $point
+                v-icon(v-if="state.chartType.key==='time'") $working
+                span.title.ml-1 {{state.chartType.title}}の変動
+              transition(:chartData="monthlyChartLog")
     v-speed-dial.floating-action-button(
       v-if="homeTab===1"
       v-model="state.fab" fixed bottom right transition="slide-y-reverse-transition")
         template(v-slot:activator="")
-          v-btn(v-model="state.fab" :color="state.graphType.color" dark="" fab="")
+          v-btn(v-model="state.fab" :color="state.chartType.color" dark="" fab="")
             v-icon(v-if="state.fab") $close
             template(v-else)
-              v-icon(v-if="state.graphType.key==='point'") $point
-              v-icon(v-if="state.graphType.key==='time'") $working
-        v-btn(@click="setGraphType({title:'経験値',key:'point',color:'#ff7f50'})" fab='' dark='' small='' color='#ff7f50')
+              v-icon(v-if="state.chartType.key==='point'") $point
+              v-icon(v-if="state.chartType.key==='time'") $working
+        v-btn(@click="setchartType({title:'経験値',key:'point',color:'#ff7f50'})" fab='' dark='' small='' color='#ff7f50')
           v-icon $point
-        v-btn(@click="setGraphType({title:'労働時間',key:'time',color:'#4682b4'})" fab='' dark='' small='' color='#4682b4')
+        v-btn(@click="setchartType({title:'労働時間',key:'time',color:'#4682b4'})" fab='' dark='' small='' color='#4682b4')
           v-icon $working
 </template>
 <script lang="ts">
@@ -56,7 +56,7 @@ type Props = {
   homeTab: number
 }
 
-type GraphType = {
+type ChartType = {
   title: string
   key: string
   color: string
@@ -70,54 +70,38 @@ export default defineComponent({
   setup(props: Props, ctx: SetupContext) {
     const state = reactive({
       fab: false,
-      graphType: { title: '経験値', key: 'point', color: '#ff7f50' },
+      chartType: { title: '経験値', key: 'point', color: '#ff7f50' },
       logs: {}
     })
     const userComponent = UserComponent()
     const logComponent = LogComponent()
+
+    async function setChartData() {
+      logComponent.reset()
+      const uid = userComponent.currentUser.value.id
+      const startDate = DateTips.FirstDateInYear
+      const endDate = DateTips.LastDateInYear
+      await logComponent.getList(uid, {
+        startDate,
+        endDate
+      })
+      logComponent.formatForChart(uid, state.chartType)
+    }
+
     watch(userComponent.isLogin, async val => {
-      if (val) {
-        logComponent.reset()
-        const uid = userComponent.currentUser.value.id
-        const startDate = DateTips.FirstDateInYear
-        const endDate = DateTips.LastDateInYear
-        await logComponent.getList(uid, {
-          startDate,
-          endDate
-        })
-        logComponent.formatForGraph(uid, state.graphType)
-      }
+      if (val) setChartData()
     })
     watch(
       () => props.homeTab,
       async val => {
-        if (val === 1) {
-          logComponent.reset()
-          const uid = userComponent.currentUser.value.id
-          const startDate = DateTips.FirstDateInYear
-          const endDate = DateTips.LastDateInYear
-          await logComponent.getList(uid, {
-            startDate,
-            endDate
-          })
-          logComponent.formatForGraph(uid, state.graphType)
-        }
+        if (val === 1) setChartData()
       }
     )
     watch(
-      () => state.graphType,
-      async () => {
-        logComponent.reset()
-        const uid = userComponent.currentUser.value.id
-        const startDate = DateTips.FirstDateInYear
-        const endDate = DateTips.LastDateInYear
-        await logComponent.getList(uid, {
-          startDate,
-          endDate
-        })
-        logComponent.formatForGraph(uid, state.graphType)
-      }
+      () => state.chartType,
+      async () => setChartData()
     )
+
     return {
       state,
       ...userComponent,
@@ -132,8 +116,8 @@ export default defineComponent({
         currentUser.isComplated = true
         userComponent.update(currentUser)
       },
-      setGraphType(data: GraphType) {
-        state.graphType = data
+      setchartType(data: ChartType) {
+        state.chartType = data
       }
     }
   }

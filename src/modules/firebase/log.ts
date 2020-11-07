@@ -8,7 +8,7 @@ export default () => {
     loading: false,
     log: {} as Log,
     logList: [] as Log[],
-    monthlyGraphLog: {}
+    monthlyChartLog: {}
   })
 
   async function reset() {
@@ -31,19 +31,19 @@ export default () => {
       })
   }
 
-  type GraphType = {
+  type ChartType = {
     title: string
     key: string
     color: string
   }
 
-  function formatForGraph(uid: string, graphType: GraphType) {
+  function formatForChart(uid: string, chartType: ChartType) {
     const labels: string[] = []
     const datasets = [
       {
-        label: graphType.title,
+        label: chartType.title,
         lineTension: 0,
-        borderColor: graphType.color,
+        borderColor: chartType.color,
         data: [] as string[]
       }
     ]
@@ -52,7 +52,7 @@ export default () => {
       labels.push(DateTips.toStr(date))
     })
 
-    switch (graphType.key) {
+    switch (chartType.key) {
       case 'point':
         state.logList.map(el => {
           datasets[0].data[el.date.getDate() - 1] = (
@@ -73,13 +73,13 @@ export default () => {
         })
         break
     }
-    state.monthlyGraphLog = { labels, datasets }
+    state.monthlyChartLog = { labels, datasets }
   }
 
   return {
     ...toRefs(state),
     getList,
     reset,
-    formatForGraph
+    formatForChart
   }
 }
