@@ -69,9 +69,6 @@ export default class UserModel {
       .collection('users')
       .doc(user.id)
       .update(user)
-      .then(() => {
-        store.dispatch('setUser', user)
-      })
   }
   /*
   public async remove(id: string) {
@@ -93,97 +90,25 @@ export default class UserModel {
     return store.getters.currentUser as User
   }
 
-  public async signInWithGoogle() {
+  public signInWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider()
-    const res = await firebase.auth().signInWithPopup(provider)
-    if (res.user) {
-      const userData: any = await this.get(res.user?.uid)
-      if (userData.data) store.dispatch('setUser', userData.data)
-      else {
-        this.create({
-          id: res.user.uid,
-          photoURL: res.user.photoURL,
-          displayName: res.user.displayName,
-          petCode: null,
-          petName: null,
-          level: 0,
-          point: 0,
-          time: 0,
-          isWorking: false,
-          monthlyTime: 0,
-          monthlyPoint: 0,
-          weeklyTime: 0,
-          weeklyPoint: 0,
-          dailyTime: 0,
-          dailyPoint: 0,
-          isComplated: false
-        })
-      }
-    }
-    return
+    return firebase.auth().signInWithPopup(provider)
   }
 
-  public async signInWithTwitter() {
+  public signInWithTwitter() {
     const provider = new firebase.auth.TwitterAuthProvider()
-    const res = await firebase.auth().signInWithPopup(provider)
-    if (res.user) {
-      const userData: any = await this.get(res.user?.uid)
-      if (userData.data) store.dispatch('setUser', userData.data)
-      else {
-        this.create({
-          id: res.user.uid,
-          photoURL: res.user.photoURL,
-          displayName: res.user.displayName,
-          petCode: null,
-          petName: null,
-          level: 0,
-          point: 0,
-          time: 0,
-          isWorking: false,
-          monthlyTime: 0,
-          monthlyPoint: 0,
-          weeklyTime: 0,
-          weeklyPoint: 0,
-          dailyTime: 0,
-          dailyPoint: 0,
-          isComplated: false
-        })
-      }
-    }
-    return
+    return firebase.auth().signInWithPopup(provider)
   }
 
-  public async signInWithFacebook() {
+  public signInWithFacebook() {
     const provider = new firebase.auth.FacebookAuthProvider()
-    const res = await firebase.auth().signInWithPopup(provider)
-    if (res.user) {
-      const userData: any = await this.get(res.user?.uid)
-      if (userData.data) store.dispatch('setUser', userData.data)
-      else {
-        this.create({
-          id: res.user.uid,
-          photoURL: res.user.photoURL,
-          displayName: res.user.displayName,
-          petCode: null,
-          petName: null,
-          level: 0,
-          point: 0,
-          time: 0,
-          isWorking: false,
-          monthlyTime: 0,
-          monthlyPoint: 0,
-          weeklyTime: 0,
-          weeklyPoint: 0,
-          dailyTime: 0,
-          dailyPoint: 0,
-          isComplated: false
-        })
-      }
-    }
-    return
+    return firebase.auth().signInWithPopup(provider)
   }
 
   public async signOut() {
-    store.dispatch('removeUser')
+    firebase
+      .auth()
+      .signOut()
+      .then(() => store.dispatch('removeUser'))
   }
 }

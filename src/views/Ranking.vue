@@ -40,7 +40,7 @@ import { reactive, defineComponent, watch } from '@vue/composition-api'
 import LoadingCircle from '@/components/LoadingCircle.vue'
 import UserList from '@/templates/UserList.vue'
 import UserComponent from '@/modules/firebase/user'
-
+import _ from 'lodash'
 type Props = {
   tabs: { homeTab: number; rankingTab: number }
 }
@@ -86,20 +86,26 @@ export default defineComponent({
     })
 
     function setRanknigData() {
-      userComponent.reset()
       const field = fields[props.tabs.rankingTab][state.sortType.name]
       state.contentKey = field.key
       userComponent.getList(field.key)
     }
-
+    watch(
+      () => [props.tabs.rankingTab, state.sortType],
+      () => userComponent.reset()
+    )
     watch(
       () => props.tabs.rankingTab,
-      async () => setRanknigData(),
+      _.debounce(function() {
+        setRanknigData()
+      }, 100),
       { immediate: true }
     )
     watch(
       () => state.sortType,
-      async () => setRanknigData()
+      _.debounce(function() {
+        setRanknigData()
+      }, 100)
     )
 
     return {
