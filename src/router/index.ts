@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '@/views/Home.vue'
-import Search from '@/views/Search.vue'
 import Ranking from '@/views/Ranking.vue'
 import Notifications from '@/views/Notifications.vue'
 import Config from '@/views/Config.vue'
@@ -13,7 +12,7 @@ Vue.use(VueRouter)
 const routes: Array<RouteConfig> = [
   {
     path: '/ranking',
-    name: 'ランキング',
+    name: 'トップ100',
     component: Ranking
   },
   {

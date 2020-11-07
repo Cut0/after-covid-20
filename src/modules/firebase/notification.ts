@@ -7,15 +7,13 @@ export default () => {
   let isLast = false
   const state = reactive({
     loading: false,
-    notifications: [] as Notification[],
-    identifier: 1
+    notifications: [] as Notification[]
   })
 
   async function reset() {
     state.notifications = []
     cursor = 0
     isLast = false
-    state.identifier++
   }
 
   function createQuery() {
@@ -37,16 +35,6 @@ export default () => {
       .finally(() => {
         state.loading = false
       })
-  }
-
-  async function infiniteHandler($state: StateChanger) {
-    await getList()
-    if (isLast) {
-      $state.complete(!state.notifications.length)
-    } else {
-      $state.loaded()
-    }
-    cursor += perPage
   }
 
   async function getAll() {

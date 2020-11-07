@@ -15,17 +15,20 @@ v-row(justify="center" no-gutters)
         buttonName="登録"
         @ok="registerPet")
       template(v-if="isLogin")
-        v-tabs-items(v-model="homeTab")
+        v-tabs-items(v-model="tabs.homeTab")
           v-tab-item(key="0")
           v-tab-item(key="1")
             v-container.pl-3
               v-row.pl-3.my-2(align="center")
                 v-icon(v-if="state.chartType.key==='point'") $point
                 v-icon(v-if="state.chartType.key==='time'") $working
+                v-icon(v-if="state.chartType.key==='level'") $level
                 span.title.ml-1 {{state.chartType.title}}の変動
-              transition(:chartData="monthlyChartLog")
+              loading-circle(v-if="loading")
+              template(v-else)
+                transition(:chartData="monthlyChartLog")
     v-speed-dial.floating-action-button(
-      v-if="homeTab===1"
+      v-if="tabs.homeTab===1"
       v-model="state.fab" fixed bottom right transition="slide-y-reverse-transition")
         template(v-slot:activator="")
           v-btn(v-model="state.fab" :color="state.chartType.color" dark="" fab="")
@@ -33,10 +36,13 @@ v-row(justify="center" no-gutters)
             template(v-else)
               v-icon(v-if="state.chartType.key==='point'") $point
               v-icon(v-if="state.chartType.key==='time'") $working
+              v-icon(v-if="state.chartType.key==='level'") $level
         v-btn(@click="setchartType({title:'経験値',key:'point',color:'#ff7f50'})" fab='' dark='' small='' color='#ff7f50')
           v-icon $point
         v-btn(@click="setchartType({title:'労働時間',key:'time',color:'#4682b4'})" fab='' dark='' small='' color='#4682b4')
           v-icon $working
+        v-btn(@click="setchartType({title:'レベル',key:'level',color:'#2e8b57'})" fab='' dark='' small='' color='#2e8b57')
+          v-icon $level
 </template>
 <script lang="ts">
 import {
@@ -50,10 +56,11 @@ import LogComponent from '@/modules/firebase/log'
 import GeneralCard from '@/components/cards/GeneralCard.vue'
 import RegisterCard from '@/components/cards/RegisterCard.vue'
 import Transition from '@/components/graphs/SingleTransition.vue'
+import LoadingCircle from '@/components/LoadingCircle.vue'
 import { DateTips, ToolTips } from '@/mixins'
 
 type Props = {
-  homeTab: number
+  tabs: { homeTab: number; rankingTab: number }
 }
 
 type ChartType = {
@@ -63,18 +70,18 @@ type ChartType = {
 }
 
 export default defineComponent({
-  components: { GeneralCard, RegisterCard, Transition },
+  components: { GeneralCard, RegisterCard, Transition, LoadingCircle },
   props: {
-    homeTab: { type: Number }
+    tabs: {}
   },
   setup(props: Props, ctx: SetupContext) {
+    const userComponent = UserComponent()
+    const logComponent = LogComponent()
     const state = reactive({
       fab: false,
       chartType: { title: '経験値', key: 'point', color: '#ff7f50' },
       logs: {}
     })
-    const userComponent = UserComponent()
-    const logComponent = LogComponent()
 
     async function setChartData() {
       logComponent.reset()
@@ -92,7 +99,7 @@ export default defineComponent({
       if (val) setChartData()
     })
     watch(
-      () => props.homeTab,
+      () => props.tabs.homeTab,
       async val => {
         if (val === 1) setChartData()
       }

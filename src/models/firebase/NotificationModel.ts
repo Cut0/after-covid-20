@@ -1,7 +1,7 @@
 import * as firebase from 'firebase/app'
 import 'firebase/firestore'
 
-export default class MemoModel {
+export default class NotificationModel {
   db: firebase.firestore.Firestore
   constructor() {
     this.db = firebase.firestore()

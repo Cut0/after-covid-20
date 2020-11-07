@@ -3,7 +3,7 @@ import 'firebase/firestore'
 import { User } from '@/types'
 import store from '@/store'
 
-export default class MemoModel {
+export default class UserModel {
   db: firebase.firestore.Firestore
   constructor() {
     this.db = firebase.firestore()
@@ -23,12 +23,11 @@ export default class MemoModel {
     })
   }
 
-  public async getList({ limit = 20, offset = 0 }, sortkey = 'id') {
+  public async getList({ limit = 20 }, sortkey = 'id') {
     const users: firebase.firestore.DocumentData = []
     await this.db
       .collection('users')
       .orderBy(sortkey, 'desc')
-      .startAt(offset)
       .limit(limit)
       .get()
       .then(el => {

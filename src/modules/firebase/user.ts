@@ -3,22 +3,20 @@ import UserModel from '@/models/firebase/UserModel'
 import { StateChanger, User } from '@/types'
 
 export default () => {
-  const perPage = 20
+  const perPage = 100
   let cursor = 0
   let isLast = false
   const state = reactive({
     loading: false,
     isLogin: false,
     user: {} as User,
-    users: [] as User[],
-    identifier: 1
+    users: [] as User[]
   })
 
   async function reset() {
     state.users = []
     cursor = 0
     isLast = false
-    state.identifier++
   }
 
   function createQuery() {
@@ -82,16 +80,6 @@ export default () => {
       .finally(() => {
         state.loading = false
       })
-  }
-
-  async function infiniteHandler($state: StateChanger) {
-    await getList()
-    if (isLast) {
-      $state.complete(!state.users.length)
-    } else {
-      $state.loaded()
-    }
-    cursor += perPage
   }
 
   async function getAll(sortkey = 'id') {
