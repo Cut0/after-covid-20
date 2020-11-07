@@ -1,29 +1,18 @@
 import { reactive, toRefs } from '@vue/composition-api'
 import LogModel from '@/models/firebase/LogModel'
-import { StateChanger, Log } from '@/types'
+import { DateTips } from '@/mixins'
+import { Log } from '@/types'
 
 export default () => {
   const state = reactive({
     loading: false,
     log: {} as Log,
-    logList: [] as Log[]
+    logList: [] as Log[],
+    monthlyGraphLog: {}
   })
 
   async function reset() {
     state.logList = []
-  }
-
-  async function get(id: string) {
-    if (state.loading) return
-    state.loading = true
-    return new LogModel()
-      .get(id)
-      .then((res: any) => {
-        state.log = res.data
-      })
-      .finally(() => {
-        state.loading = false
-      })
   }
 
   async function getList(
@@ -42,24 +31,55 @@ export default () => {
       })
   }
 
-  async function getAll(uid: string) {
-    if (state.loading) return
-    state.loading = true
-    return new LogModel()
-      .getAll(uid)
-      .then((res: any) => {
-        state.logList = res.data
-      })
-      .finally(() => {
-        state.loading = false
-      })
+  type GraphType = {
+    title: string
+    key: string
+    color: string
+  }
+
+  function formatForGraph(uid: string, graphType: GraphType) {
+    const labels: string[] = []
+    const datasets = [
+      {
+        label: graphType.title,
+        lineTension: 0,
+        borderColor: graphType.color,
+        data: [] as string[]
+      }
+    ]
+    DateTips.repeatMonth(new Date(), (date: Date) => {
+      datasets[0].data.push('0')
+      labels.push(DateTips.toStr(date))
+    })
+
+    switch (graphType.key) {
+      case 'point':
+        state.logList.map(el => {
+          datasets[0].data[el.date.getDate() - 1] = (
+            el.point + Number(datasets[0].data[el.date.getDate() - 1])
+          ).toString()
+        })
+        break
+      case 'time':
+        state.logList.map(el => {
+          datasets[0].data[el.date.getDate() - 1] = (
+            el.time + Number(datasets[0].data[el.date.getDate() - 1])
+          ).toString()
+        })
+        break
+      case 'level':
+        state.logList.map(el => {
+          datasets[0].data[el.date.getDate() - 1] = el.level.toString()
+        })
+        break
+    }
+    state.monthlyGraphLog = { labels, datasets }
   }
 
   return {
     ...toRefs(state),
-    get,
-    getAll,
     getList,
-    reset
+    reset,
+    formatForGraph
   }
 }

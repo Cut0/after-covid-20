@@ -23,7 +23,7 @@ v-row(justify="center" no-gutters)
                 v-icon(v-if="state.graphType.key==='point'") $point
                 v-icon(v-if="state.graphType.key==='time'") $working
                 span.title.ml-1 {{state.graphType.title}}の変動
-              transition(:chartData="state.logs")
+              transition(:chartData="monthlyGraphLog")
     v-speed-dial.floating-action-button(
       v-if="homeTab===1"
       v-model="state.fab" fixed bottom right transition="slide-y-reverse-transition")
@@ -51,7 +51,6 @@ import GeneralCard from '@/components/cards/GeneralCard.vue'
 import RegisterCard from '@/components/cards/RegisterCard.vue'
 import Transition from '@/components/graphs/SingleTransition.vue'
 import { DateTips, ToolTips } from '@/mixins'
-import { Tooltip } from 'chart.js'
 
 type Props = {
   homeTab: number
@@ -61,51 +60,6 @@ type GraphType = {
   title: string
   key: string
   color: string
-}
-
-async function formatLogs(uid: string, graphType: GraphType) {
-  const labels: string[] = []
-  const datasets = [
-    {
-      label: graphType.title,
-      lineTension: 0,
-      borderColor: graphType.color,
-      data: [] as string[]
-    }
-  ]
-  DateTips.repeatMonth(new Date(), (date: Date) => {
-    datasets[0].data.push('0')
-    labels.push(DateTips.toStr(date))
-  })
-
-  const logComponent = LogComponent()
-  logComponent.reset()
-  const startDate = DateTips.FirstDateInYear
-  const endDate = DateTips.LastDateInYear
-  await logComponent.getList(uid, { startDate, endDate }).then(() => {
-    switch (graphType.key) {
-      case 'point':
-        logComponent.logList.value.map(el => {
-          datasets[0].data[el.date.getDate() - 1] = (
-            el.point + Number(datasets[0].data[el.date.getDate() - 1])
-          ).toString()
-        })
-        break
-      case 'time':
-        logComponent.logList.value.map(el => {
-          datasets[0].data[el.date.getDate() - 1] = (
-            el.time + Number(datasets[0].data[el.date.getDate() - 1])
-          ).toString()
-        })
-        break
-      case 'level':
-        logComponent.logList.value.map(el => {
-          datasets[0].data[el.date.getDate() - 1] = el.level.toString()
-        })
-        break
-    }
-  })
-  return { labels, datasets }
 }
 
 export default defineComponent({
@@ -120,34 +74,54 @@ export default defineComponent({
       logs: {}
     })
     const userComponent = UserComponent()
+    const logComponent = LogComponent()
     watch(userComponent.isLogin, async val => {
       if (val) {
-        formatLogs(userComponent.currentUser.value.id, state.graphType).then(
-          res => (state.logs = res)
-        )
+        logComponent.reset()
+        const uid = userComponent.currentUser.value.id
+        const startDate = DateTips.FirstDateInYear
+        const endDate = DateTips.LastDateInYear
+        await logComponent.getList(uid, {
+          startDate,
+          endDate
+        })
+        logComponent.formatForGraph(uid, state.graphType)
       }
     })
     watch(
       () => props.homeTab,
-      val => {
+      async val => {
         if (val === 1) {
-          formatLogs(userComponent.currentUser.value.id, state.graphType).then(
-            res => (state.logs = res)
-          )
+          logComponent.reset()
+          const uid = userComponent.currentUser.value.id
+          const startDate = DateTips.FirstDateInYear
+          const endDate = DateTips.LastDateInYear
+          await logComponent.getList(uid, {
+            startDate,
+            endDate
+          })
+          logComponent.formatForGraph(uid, state.graphType)
         }
       }
     )
     watch(
       () => state.graphType,
-      () => {
-        formatLogs(userComponent.currentUser.value.id, state.graphType).then(
-          res => (state.logs = res)
-        )
+      async () => {
+        logComponent.reset()
+        const uid = userComponent.currentUser.value.id
+        const startDate = DateTips.FirstDateInYear
+        const endDate = DateTips.LastDateInYear
+        await logComponent.getList(uid, {
+          startDate,
+          endDate
+        })
+        logComponent.formatForGraph(uid, state.graphType)
       }
     )
     return {
       state,
       ...userComponent,
+      ...logComponent,
       toConfig() {
         ToolTips.navigateTo(ctx, '/config')
       },
