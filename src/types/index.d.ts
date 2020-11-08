@@ -15,6 +15,8 @@ export type User = {
   dailyTime: number
   dailyPoint: number
   isComplated: boolean
+  date: Date
+  petPhotoURL: string
 }
 
 export type Log = {
@@ -29,11 +31,4 @@ export type Log = {
 export type Notification = {
   title: string
   content: string
-}
-
-export type StateChanger = {
-  loaded: () => void
-  complete: (noResults?: boolean) => void
-  reset: () => void
-  error: () => void
 }

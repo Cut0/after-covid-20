@@ -17,6 +17,21 @@ v-row(justify="center" no-gutters)
       template(v-if="isLogin")
         v-tabs-items(v-model="tabs.homeTab")
           v-tab-item(key="0")
+            v-row.my-6.mx-2(align="center")
+              v-progress-circular(
+                  :rotate="-90"
+                  :size="70"
+                  :width="8"
+                  :value="currentUser.point%100"
+                  color="#68B787") {{currentUser.level}}
+              span.headline.ml-4 {{currentUser.petName}}
+            character(
+              :photoURL="currentUser.petPhotoURL"
+              :isWorking="currentUser.isWorking"
+            )
+            v-row.my-6.mx-0(justify="center" align-content="center")
+              span.display-3(v-if="currentUser.isWorking") {{state.workingTime}}
+              span.display-3(v-else) 休憩中
           v-tab-item(key="1")
             v-container.pl-3
               v-row.pl-3.my-2(align="center")
@@ -37,11 +52,11 @@ v-row(justify="center" no-gutters)
               v-icon(v-if="state.chartType.key==='point'") $point
               v-icon(v-if="state.chartType.key==='time'") $working
               v-icon(v-if="state.chartType.key==='level'") $level
-        v-btn(@click="setchartType({title:'経験値',key:'point',color:'#ff7f50'})" fab='' dark='' small='' color='#ff7f50')
+        v-btn(@click="setChartType({title:'経験値',key:'point',color:'#ff7f50'})" fab='' dark='' small='' color='#ff7f50')
           v-icon $point
-        v-btn(@click="setchartType({title:'労働時間',key:'time',color:'#4682b4'})" fab='' dark='' small='' color='#4682b4')
+        v-btn(@click="setChartType({title:'労働時間',key:'time',color:'#4682b4'})" fab='' dark='' small='' color='#4682b4')
           v-icon $working
-        v-btn(@click="setchartType({title:'レベル',key:'level',color:'#2e8b57'})" fab='' dark='' small='' color='#2e8b57')
+        v-btn(@click="setChartType({title:'レベル',key:'level',color:'#2e8b57'})" fab='' dark='' small='' color='#2e8b57')
           v-icon $level
 </template>
 <script lang="ts">
@@ -57,6 +72,7 @@ import GeneralCard from '@/components/cards/GeneralCard.vue'
 import RegisterCard from '@/components/cards/RegisterCard.vue'
 import Transition from '@/components/graphs/SingleTransition.vue'
 import LoadingCircle from '@/components/LoadingCircle.vue'
+import Character from '@/components/canvas/Character.vue'
 import { DateTips, ToolTips } from '@/mixins'
 
 type Props = {
@@ -70,7 +86,13 @@ type ChartType = {
 }
 
 export default defineComponent({
-  components: { GeneralCard, RegisterCard, Transition, LoadingCircle },
+  components: {
+    GeneralCard,
+    RegisterCard,
+    Transition,
+    LoadingCircle,
+    Character
+  },
   props: {
     tabs: {}
   },
@@ -79,6 +101,7 @@ export default defineComponent({
     const logComponent = LogComponent()
     const state = reactive({
       fab: false,
+      workingTime: '0:00:00',
       chartType: { title: '経験値', key: 'point', color: '#ff7f50' },
       logs: {}
     })
@@ -95,19 +118,36 @@ export default defineComponent({
       logComponent.formatForChart(uid, state.chartType)
     }
 
+    function setTimer() {
+      setInterval(() => {
+        if (!userComponent.currentUser.value.date) return
+        const diff = DateTips.dateDiff(
+          new Date(),
+          userComponent.currentUser.value.date
+        )
+        state.workingTime = DateTips.toTimeStr(diff)
+      }, 1000)
+    }
+
     watch(userComponent.isLogin, async val => {
-      if (val) setChartData()
-    })
-    watch(
-      () => props.tabs.homeTab,
-      async val => {
-        if (val === 1) setChartData()
+      if (val) {
+        setChartData()
+        setTimer()
       }
-    )
-    watch(
-      () => state.chartType,
-      async () => setChartData()
-    )
+    })
+    if (userComponent.isLogin) {
+      setTimer()
+      watch(
+        () => props.tabs.homeTab,
+        async val => {
+          if (val === 1) setChartData()
+        }
+      )
+      watch(
+        () => state.chartType,
+        async () => setChartData()
+      )
+    }
 
     return {
       state,
@@ -123,7 +163,7 @@ export default defineComponent({
         currentUser.isComplated = true
         userComponent.update(currentUser)
       },
-      setchartType(data: ChartType) {
+      setChartType(data: ChartType) {
         state.chartType = data
       }
     }

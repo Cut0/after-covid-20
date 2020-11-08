@@ -1,6 +1,6 @@
 import { reactive, toRefs } from '@vue/composition-api'
 import NotificationModel from '@/models/firebase/NotificationModel'
-import { StateChanger, Notification } from '@/types'
+import { Notification } from '@/types'
 export default () => {
   const perPage = 20
   let cursor = 0

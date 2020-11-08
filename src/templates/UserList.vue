@@ -4,7 +4,7 @@
       user-item(
         v-for="(el,index) in userData"
         :showRank="showRank"
-        :name="el.displayName"
+        :name="el.petName"
         :img="el.photoURL"
         :rank="index+1"
         :content="el[contentKey]"

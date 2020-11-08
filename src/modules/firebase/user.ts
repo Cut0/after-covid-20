@@ -1,6 +1,6 @@
 import { computed, reactive, toRefs } from '@vue/composition-api'
 import UserModel from '@/models/firebase/UserModel'
-import { StateChanger, User } from '@/types'
+import { User } from '@/types'
 
 export default () => {
   const perPage = 100
