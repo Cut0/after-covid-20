@@ -6,7 +6,6 @@ import Notifications from '@/views/Notifications.vue'
 import Config from '@/views/Config.vue'
 import User from '@/views/User.vue'
 import UserComponent from '@/modules/firebase/user'
-import { ToolTips } from '@/mixins'
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [

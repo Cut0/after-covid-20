@@ -62,8 +62,7 @@ import LogComponent from '@/modules/firebase/log'
 import Transition from '@/components/graphs/SingleTransition.vue'
 import LoadingCircle from '@/components/LoadingCircle.vue'
 import Character from '@/components/canvas/Character.vue'
-import { User } from '@/types'
-import { DateTips, ToolTips } from '@/mixins'
+import { DateTips } from '@/mixins'
 
 type Props = {
   tabs: { userTab: number; rankingTab: number }
@@ -108,6 +107,16 @@ export default defineComponent({
     }
 
     userComponent.get(uid).then(() => {
+      watch(
+        () => props.tabs.userTab,
+        async val => {
+          if (val === 1) setChartData()
+        }
+      )
+      watch(
+        () => state.chartType,
+        async () => setChartData()
+      )
       if (userComponent.user.value.id) {
         setInterval(() => {
           const diff = DateTips.dateDiff(
@@ -116,16 +125,6 @@ export default defineComponent({
           )
           state.workingTime = DateTips.toTimeStr(diff)
         }, 1000)
-        watch(
-          () => props.tabs.userTab,
-          async val => {
-            if (val === 1) setChartData()
-          }
-        )
-        watch(
-          () => state.chartType,
-          async () => setChartData()
-        )
       }
     })
 
