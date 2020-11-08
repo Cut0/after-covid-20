@@ -24,7 +24,8 @@ import {
   mdiAlphaPCircleOutline,
   mdiLockReset,
   mdiArmFlexOutline,
-  mdiBellOutline
+  mdiBellOutline,
+  mdiArrowLeft
 } from '@mdi/js'
 Vue.use(Vuetify)
 
@@ -55,7 +56,8 @@ export default new Vuetify({
       working: mdiSchoolOutline,
       point: mdiAlphaPCircleOutline,
       reset: mdiLockReset,
-      level: mdiArmFlexOutline
+      level: mdiArmFlexOutline,
+      back: mdiArrowLeft
     }
   },
   theme: { dark: false }

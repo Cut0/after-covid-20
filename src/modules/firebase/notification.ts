@@ -24,7 +24,6 @@ export default () => {
   }
 
   async function getList() {
-    console.log('通知一覧取得')
     if (isLast || state.loading) return
     state.loading = true
     return new NotificationModel()
@@ -40,7 +39,7 @@ export default () => {
   async function getAll() {
     if (isLast || state.loading) return
     state.loading = true
-    return new NotificationModel()
+    return await new NotificationModel()
       .getAll()
       .then((res: any) => {
         state.notifications.push(...res.data)

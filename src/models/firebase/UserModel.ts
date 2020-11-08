@@ -16,7 +16,12 @@ export default class UserModel {
       .doc(id)
       .get()
       .then(doc => {
-        user = doc.exists ? doc.data() : null
+        if (doc.exists) {
+          user = doc.data()
+          user.date = user.date.toDate()
+        } else {
+          user = null
+        }
       })
     return new Promise(resolve => {
       resolve({ data: user })

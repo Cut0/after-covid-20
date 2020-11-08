@@ -6,7 +6,7 @@ import Notifications from '@/views/Notifications.vue'
 import Config from '@/views/Config.vue'
 import User from '@/views/User.vue'
 import UserComponent from '@/modules/firebase/user'
-
+import { ToolTips } from '@/mixins'
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
@@ -50,8 +50,7 @@ router.beforeEach((to, from, next) => {
     userComponent.isLogin &&
     to.params.id === userComponent.currentUser.value.id
   ) {
-    console.log(to.params.id)
-    next({ name: 'ホーム' })
+    router.push({ path: '/' })
   } else next()
 })
 

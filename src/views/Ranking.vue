@@ -16,7 +16,8 @@ v-row(justify="center" no-gutters)
             :showRank="true"
             :userData="users"
             :contentKey="state.contentKey"
-            color="#68B787")
+            color="#68B787"
+            @clickedItem="toUser")
     v-speed-dial.floating-action-button(
       v-model="state.fab" fixed bottom right transition="slide-y-reverse-transition")
         template(v-slot:activator="")
@@ -36,10 +37,16 @@ v-row(justify="center" no-gutters)
 </template>
 
 <script lang="ts">
-import { reactive, defineComponent, watch } from '@vue/composition-api'
+import {
+  reactive,
+  defineComponent,
+  watch,
+  SetupContext
+} from '@vue/composition-api'
 import LoadingCircle from '@/components/LoadingCircle.vue'
 import UserList from '@/templates/UserList.vue'
 import UserComponent from '@/modules/firebase/user'
+import { ToolTips } from '@/mixins'
 import _ from 'lodash'
 type Props = {
   tabs: { homeTab: number; rankingTab: number }
@@ -55,7 +62,7 @@ export default defineComponent({
   props: {
     tabs: {}
   },
-  setup(props: Props) {
+  setup(props: Props, ctx: SetupContext) {
     const userComponent = UserComponent()
     const fields: {
       [key: string]: {
@@ -111,6 +118,9 @@ export default defineComponent({
     return {
       state,
       ...userComponent,
+      toUser(id: string) {
+        ToolTips.navigateTo(ctx, '/' + id)
+      },
       setSortType(type: SortType) {
         state.sortType = type
       }
@@ -121,9 +131,4 @@ export default defineComponent({
 <style scoped lang="sass">
 .floating-action-button
   margin-bottom: 64px
-.tes
-  display: flex
-  align-items: center
-  > span
-    writing-mode: horizontal-tb !important
 </style>

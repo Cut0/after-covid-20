@@ -17,6 +17,8 @@ export default class LogModel {
         if (doc.exists) {
           log = doc.data()
           log.date = log.date.toDate()
+        } else {
+          log = null
         }
       })
     return new Promise(resolve => {

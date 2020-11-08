@@ -14,6 +14,7 @@ export default () => {
   })
 
   async function reset() {
+    state.user = {} as User
     state.users = []
     cursor = 0
     isLast = false
@@ -64,15 +65,17 @@ export default () => {
     return new UserModel().currentData()
   }
 
-  async function get() {
+  async function get(uid: string) {
     if (state.loading) return
-    console.log('user情報取得')
+    return await new UserModel().get(uid).then((res: any) => {
+      state.user = res.data
+    })
   }
 
   async function getList(sortKey = 'id') {
     if (isLast || state.loading) return
     state.loading = true
-    return new UserModel()
+    return await new UserModel()
       .getList(createQuery(), sortKey)
       .then((res: any) => {
         state.users.push(...res.data)
@@ -85,7 +88,7 @@ export default () => {
   async function getAll(sortkey = 'id') {
     if (isLast || state.loading) return
     state.loading = true
-    return new UserModel()
+    return await new UserModel()
       .getAll(sortkey)
       .then((res: any) => {
         state.users.push(...res.data)
@@ -97,7 +100,7 @@ export default () => {
 
   async function update(user: User) {
     if (state.loading) return
-    return new UserModel().update(user)
+    return await new UserModel().update(user)
   }
 
   async function remove() {
@@ -110,6 +113,7 @@ export default () => {
     isLogin: computed(() => isLogin()),
     currentUser: computed(() => currentUser()),
     reset,
+    get,
     getList,
     getAll,
     signInWithGoogle,

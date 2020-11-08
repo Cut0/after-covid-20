@@ -7,6 +7,9 @@
         v-icon(v-if="$route.name==='ランキング'") $crown
         v-icon(v-if="$route.name==='通知一覧'") $notification
         v-icon(v-if="$route.name==='設定'") $config
+        v-icon(
+          v-if="$route.name==='ユーザー'"
+          @click="toRanking") $back
       v-toolbar-title {{this.$route.name}}
       v-spacer
       v-avatar(size="36")
@@ -15,11 +18,17 @@
         template(v-else)
           v-icon $account
       template(
-          v-if="($route.name==='ランキング')||($route.name==='ホーム'&&isLogin&&currentUser.isComplated)"
+          v-if="($route.name==='ランキング')|($route.name==='ユーザー')|($route.name==='ホーム'&&isLogin&&currentUser.isComplated)"
           v-slot:extension)
           v-tabs(
             v-if="$route.name==='ホーム'&&isLogin&&currentUser.isComplated"
             v-model="state.tabs.homeTab"
+            fixed-tabs centered)
+            v-tab(key="0") クッション
+            v-tab(key="1") グラフ
+          v-tabs(
+            v-if="$route.name==='ユーザー'"
+            v-model="state.tabs.userTab"
             fixed-tabs centered)
             v-tab(key="0") クッション
             v-tab(key="1") グラフ
@@ -47,6 +56,7 @@ import {
 import NavigationBar from '@/components/NavigationBar.vue'
 import NavigationDrawer from '@/components/NavigationDrawer.vue'
 import UserComponent from '@/modules/firebase/user'
+import { ToolTips } from '@/mixins'
 export default defineComponent({
   components: { NavigationBar, NavigationDrawer },
   setup(_, ctx: SetupContext) {
@@ -54,7 +64,8 @@ export default defineComponent({
     const state = reactive({
       tabs: {
         rankingTab: 0,
-        homeTab: 0
+        homeTab: 0,
+        userTab: 0
       }
     })
     watch(
@@ -62,11 +73,15 @@ export default defineComponent({
       () => {
         state.tabs.homeTab = 0
         state.tabs.rankingTab = 0
+        state.tabs.userTab = 0
       }
     )
     return {
       state,
-      ...userComponent
+      ...userComponent,
+      toRanking() {
+        ToolTips.navigateTo(ctx, '/ranking')
+      }
     }
   }
 })

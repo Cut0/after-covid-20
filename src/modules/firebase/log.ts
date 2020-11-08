@@ -12,7 +12,9 @@ export default () => {
   })
 
   async function reset() {
-    state.logList = []
+    state.log = {} as Log
+    state.logList = [] as Log[]
+    state.monthlyChartLog = {}
   }
 
   async function getList(
@@ -21,7 +23,7 @@ export default () => {
   ) {
     if (state.loading) return
     state.loading = true
-    return new LogModel()
+    return await new LogModel()
       .getList(uid, query)
       .then((res: any) => {
         state.logList.push(...res.data)

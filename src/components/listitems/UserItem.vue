@@ -20,6 +20,9 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
+    id: {
+      type: String
+    },
     rank: {
       type: Number,
       default: 0
@@ -35,10 +38,10 @@ export default defineComponent({
       default: ''
     }
   },
-  setup(_, context: SetupContext) {
+  setup(props, context: SetupContext) {
     return {
       clicked() {
-        context.emit('clicked')
+        context.emit('clicked', props.id)
       }
     }
   }
