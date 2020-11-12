@@ -7,6 +7,7 @@ export type User = {
   level: number
   point: number
   time: number
+  tmpTime: number
   isWorking: boolean
   monthlyTime: number
   monthlyPoint: number
@@ -15,12 +16,12 @@ export type User = {
   dailyTime: number
   dailyPoint: number
   isComplated: boolean
-  date: Date
+  lastSitDate: Date
+  lastStandDate: Date
   petPhotoURL: string
 }
 
 export type Log = {
-  id: string
   uid: string
   date: Date
   time: number

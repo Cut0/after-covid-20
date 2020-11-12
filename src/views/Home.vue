@@ -14,7 +14,7 @@ v-row(justify="center" no-gutters)
         content="これから一緒に働くパートナーです。しっかりと名前をつけてあげましょう"
         buttonName="登録"
         @ok="registerPet")
-      template(v-if="isLogin")
+      template(v-if="isLogin&&currentUser.isComplated")
         v-tabs-items(v-model="tabs.homeTab")
           v-tab-item(key="0")
             v-row.my-6.mx-2(align="center")
@@ -120,10 +120,10 @@ export default defineComponent({
 
     function setTimer() {
       setInterval(() => {
-        if (!userComponent.currentUser.value.date) return
+        if (!userComponent.currentUser.value.lastSitDate) return
         const diff = DateTips.dateDiff(
           new Date(),
-          userComponent.currentUser.value.date
+          userComponent.currentUser.value.lastSitDate
         )
         state.workingTime = DateTips.toTimeStr(diff)
       }, 1000)

@@ -103,9 +103,10 @@ export default () => {
     return await new UserModel().update(user)
   }
 
-  async function remove() {
+  async function remove(user: User) {
     if (state.loading) return
-    console.log('user削除')
+    await new UserModel().remove(user.id)
+    return await signOut()
   }
 
   return {
@@ -120,6 +121,7 @@ export default () => {
     signInWithTwitter,
     signInWithFacebook,
     signOut,
-    update
+    update,
+    remove
   }
 }

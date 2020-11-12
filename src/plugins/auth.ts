@@ -15,6 +15,7 @@ firebase.auth().onAuthStateChanged(user => {
       level: 0,
       point: 0,
       time: 0,
+      tmpTime: 0,
       isWorking: false,
       monthlyTime: 0,
       monthlyPoint: 0,
@@ -23,7 +24,8 @@ firebase.auth().onAuthStateChanged(user => {
       dailyTime: 0,
       dailyPoint: 0,
       isComplated: false,
-      date: new Date(),
+      lastSitDate: new Date(),
+      lastStandDate: new Date(),
       petPhotoURL:
         'https://firebasestorage.googleapis.com/v0/b/after-covid-hack.appspot.com/o/0%2Fa%2Fimage.png?alt=media&token=a4cebd91-5867-46c2-a736-1e6ddd307f67'
     }
@@ -38,7 +40,8 @@ firebase.auth().onAuthStateChanged(user => {
           store.dispatch('setUser', userData)
         } else {
           const user: any = doc.data()
-          user.date = user.date.toDate()
+          user.lastSitDate = user.lastSitDate.toDate()
+          user.lastStandDate = user.lastStandDate.toDate()
           store.dispatch('setUser', user)
         }
       })
@@ -46,8 +49,11 @@ firebase.auth().onAuthStateChanged(user => {
       .doc(user.uid)
       .onSnapshot(function(doc) {
         const user: any = doc.data()
-        user.date = user.date.toDate()
-        store.dispatch('setUser', user)
+        if (user) {
+          user.lastSitDate = user.lastSitDate.toDate()
+          user.lastStandDate = user.lastStandDate.toDate()
+          store.dispatch('setUser', user)
+        }
       })
   } else store.dispatch('removeUser')
 })

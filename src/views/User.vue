@@ -121,7 +121,7 @@ export default defineComponent({
         setInterval(() => {
           const diff = DateTips.dateDiff(
             new Date(),
-            userComponent.user.value.date
+            userComponent.user.value.lastSitDate
           )
           state.workingTime = DateTips.toTimeStr(diff)
         }, 1000)

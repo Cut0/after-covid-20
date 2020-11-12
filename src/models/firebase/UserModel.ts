@@ -18,7 +18,8 @@ export default class UserModel {
       .then(doc => {
         if (doc.exists) {
           user = doc.data()
-          user.date = user.date.toDate()
+          user.lastSitDate = user.lastSitDate.toDate()
+          user.lastStandDate = user.lastStandDate.toDate()
         } else {
           user = null
         }
@@ -75,18 +76,14 @@ export default class UserModel {
       .doc(user.id)
       .update(user)
   }
-  /*
+
   public async remove(id: string) {
     await this.db
       .collection('users')
       .doc(id)
       .delete()
-      .then(() => {
-        store.dispatch('removeUser')
-      })
   }
 
-  */
   public isLogin() {
     return store.getters.isLogin as boolean
   }

@@ -21,6 +21,7 @@ v-row(no-gutters justify="center")
             v-list-item-content
               v-list-item-title クッションの再設定
           v-list-item(
+            v-if="isLogin"
             @click="$refs.logout.open()"
             max-width="598")
             v-list-item-icon
@@ -29,6 +30,7 @@ v-row(no-gutters justify="center")
               v-list-item-title ログアウト
           v-divider
           v-list-item(
+            v-if="isLogin"
             @click="$refs.withdrawal.open()"
             max-width="598")
             v-list-item-icon
@@ -41,7 +43,8 @@ v-row(no-gutters justify="center")
         @ok="signOut")
       confirm-modal(
         ref="withdrawal"
-        title="退会しますか？" content="退会した場合今までのデータは全て削除され、復元できなくなります。")
+        title="退会しますか？" content="退会した場合今までのデータは全て削除され、復元できなくなります。"
+        @ok="deleteUser")
       register-modal(
         ref="register"
         title="クッションを再設定" 
@@ -56,10 +59,12 @@ import { defineComponent, reactive } from '@vue/composition-api'
 import ConfirmModal from '@/components/modals/ConfirmModal.vue'
 import RegisterModal from '@/components/modals/RegisterModal.vue'
 import UserComponent from '@/modules/firebase/user'
+import LogComponent from '@/modules/firebase/log'
 export default defineComponent({
   components: { ConfirmModal, RegisterModal },
   setup() {
     const userComponent = UserComponent()
+    const logComponent = LogComponent()
     const logins = {
       google: {
         icon: '$google',
@@ -96,6 +101,10 @@ export default defineComponent({
         currentUser.petCode = code
         currentUser.isComplated = true
         userComponent.update(currentUser)
+      },
+      deleteUser() {
+        logComponent.remove(userComponent.currentUser.value.id)
+        userComponent.remove(userComponent.currentUser.value)
       }
     }
   }

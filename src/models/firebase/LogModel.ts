@@ -10,7 +10,7 @@ export default class LogModel {
   public async get(id: string) {
     let log: any = undefined
     await this.db
-      .collection('Logs')
+      .collection('logs')
       .doc(id)
       .get()
       .then(doc => {
@@ -66,6 +66,18 @@ export default class LogModel {
     return new Promise(resolve => {
       resolve({ data: logs })
     })
+  }
+
+  public async remove(id: string) {
+    return await this.db
+      .collection('logs')
+      .where('uid', '==', id)
+      .get()
+      .then(el => {
+        el.forEach(doc => {
+          doc.ref.delete()
+        })
+      })
   }
   /*
   public async create(data: Log) {

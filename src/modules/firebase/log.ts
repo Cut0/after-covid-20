@@ -33,6 +33,10 @@ export default () => {
       })
   }
 
+  async function remove(id: string) {
+    return await new LogModel().remove(id)
+  }
+
   type ChartType = {
     title: string
     key: string
@@ -82,6 +86,7 @@ export default () => {
     ...toRefs(state),
     getList,
     reset,
+    remove,
     formatForChart
   }
 }
