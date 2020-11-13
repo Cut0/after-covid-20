@@ -22,7 +22,7 @@ v-row(justify="center" no-gutters)
                   :rotate="-90"
                   :size="70"
                   :width="8"
-                  :value="currentUser.point%200"
+                  :value="(currentUser.point%200)/2"
                   color="#68B787") {{currentUser.level}}
               span.headline.ml-4 {{currentUser.petName}}
             character(
@@ -41,7 +41,9 @@ v-row(justify="center" no-gutters)
                 span.title.ml-1 {{state.chartType.title}}の変動
               loading-circle(v-if="loading")
               template(v-else)
-                transition(:chartData="monthlyChartLog")
+                transition(
+                  :chartData="monthlyChartLog"
+                  :options="state.options")
     v-speed-dial.floating-action-button(
       v-if="tabs.homeTab===1"
       v-model="state.fab" fixed bottom right transition="slide-y-reverse-transition")
@@ -52,11 +54,11 @@ v-row(justify="center" no-gutters)
               v-icon(v-if="state.chartType.key==='point'") $point
               v-icon(v-if="state.chartType.key==='time'") $working
               v-icon(v-if="state.chartType.key==='level'") $level
-        v-btn(@click="setChartType({title:'経験値',key:'point',color:'#ff7f50'})" fab='' dark='' small='' color='#ff7f50')
+        v-btn(@click="setChartType({title:'経験値',key:'point',color:'#ff7f50',label:'経験値(ポイント)'})" fab='' dark='' small='' color='#ff7f50')
           v-icon $point
-        v-btn(@click="setChartType({title:'労働時間',key:'time',color:'#4682b4'})" fab='' dark='' small='' color='#4682b4')
+        v-btn(@click="setChartType({title:'労働時間',key:'time',color:'#4682b4',label:'労働時間(分)'})" fab='' dark='' small='' color='#4682b4')
           v-icon $working
-        v-btn(@click="setChartType({title:'レベル',key:'level',color:'#2e8b57'})" fab='' dark='' small='' color='#2e8b57')
+        v-btn(@click="setChartType({title:'レベル',key:'level',color:'#2e8b57',label:'レベル(LV)'})" fab='' dark='' small='' color='#2e8b57')
           v-icon $level
 </template>
 <script lang="ts">
@@ -83,6 +85,7 @@ type ChartType = {
   title: string
   key: string
   color: string
+  label: string
 }
 
 export default defineComponent({
@@ -102,8 +105,36 @@ export default defineComponent({
     const state = reactive({
       fab: false,
       workingTime: '0:00:00',
-      chartType: { title: '経験値', key: 'point', color: '#ff7f50' },
-      logs: {}
+      chartType: {
+        title: '経験値',
+        key: 'point',
+        color: '#ff7f50',
+        label: '経験値(ポイント)'
+      },
+      logs: {},
+      options: {
+        responsive: true,
+        scales: {
+          yAxes: [
+            {
+              display: true,
+              scaleLabel: {
+                display: true,
+                labelString: '経験値(ポイント)',
+                fontSize: 12
+              }
+            }
+          ]
+        },
+        layout: {
+          padding: {
+            left: 0,
+            right: 24,
+            top: 0,
+            bottom: 0
+          }
+        }
+      }
     })
 
     async function setChartData() {
@@ -145,7 +176,11 @@ export default defineComponent({
       )
       watch(
         () => state.chartType,
-        async () => setChartData()
+        async () => {
+          state.options.scales.yAxes[0].scaleLabel.labelString =
+            state.chartType.label
+          setChartData()
+        }
       )
     }
 

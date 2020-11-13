@@ -6,6 +6,7 @@ import { User } from '@/types'
 firebase.auth().onAuthStateChanged(user => {
   if (user) {
     const db = firebase.firestore()
+    const now = new Date()
     const userData: User = {
       id: user.uid,
       photoURL: user.photoURL,
@@ -23,8 +24,8 @@ firebase.auth().onAuthStateChanged(user => {
       dailyTime: 0,
       dailyPoint: 0,
       isComplated: false,
-      lastSitDate: new Date(),
-      lastStandDate: new Date(),
+      lastSitDate: now,
+      lastStandDate: new Date(now.setHours(now.getHours() - 1)),
       petPhotoURL:
         'https://firebasestorage.googleapis.com/v0/b/after-covid-hack.appspot.com/o/0%2Fb%2Fimage.png?alt=media&token=6f9605bf-1661-4baf-a28a-7592e46d3d4a'
     }
