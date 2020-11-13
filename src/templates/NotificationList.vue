@@ -6,7 +6,8 @@
       template(v-for="notification in notifications")
         notification-item(
           :title="notification.title"
-          :content="notification.content")
+          :content="notification.content"
+          :photoURL="notification.photoURL")
         v-divider
 </template>
 

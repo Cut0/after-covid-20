@@ -15,6 +15,7 @@ v-row(justify="center" no-gutters)
           user-list(
             :showRank="true"
             :userData="users"
+            :sortType="state.sortType"
             :contentKey="state.contentKey"
             color="#68B787"
             @clickedItem="toUser")

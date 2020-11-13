@@ -38,7 +38,7 @@ export default class UserModel {
       .get()
       .then(el => {
         el.forEach(doc => {
-          users.push(doc.data())
+          if (doc.data().isComplated) users.push(doc.data())
         })
       })
     return new Promise(resolve => {

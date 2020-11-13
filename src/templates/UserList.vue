@@ -9,6 +9,7 @@
         :img="el.photoURL"
         :rank="index+1"
         :content="el[contentKey]"
+        :sortType="sortType"
         @clicked="clickedItem")
 </template>
 
@@ -33,6 +34,9 @@ export default defineComponent({
     contentKey: {
       type: String,
       default: 'id'
+    },
+    sortType: {
+      type: Object
     }
   },
   setup(_, ctx: SetupContext) {

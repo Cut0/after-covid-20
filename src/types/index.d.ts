@@ -7,7 +7,6 @@ export type User = {
   level: number
   point: number
   time: number
-  tmpTime: number
   isWorking: boolean
   monthlyTime: number
   monthlyPoint: number
@@ -32,4 +31,5 @@ export type Log = {
 export type Notification = {
   title: string
   content: string
+  photoURL: string
 }

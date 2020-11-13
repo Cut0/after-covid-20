@@ -8,12 +8,15 @@
           v-img(:src="img" alt="ユーザープロフィール" loading="lazy")
       v-list-item-content
         v-list-item-title {{name}}
-      v-list-item-action.mx-4
+      v-list-item-action.mx-4(v-if="sortType.name==='time'")
+        span {{convertTime(content)}}
+      v-list-item-action.mx-4(v-else)
         span {{content}}
 </template>
 
 <script lang="ts">
-import { SetupContext, defineComponent } from '@vue/composition-api'
+import { DateTips } from '@/mixins'
+import { SetupContext, defineComponent, reactive } from '@vue/composition-api'
 export default defineComponent({
   props: {
     showRank: {
@@ -36,10 +39,16 @@ export default defineComponent({
     },
     content: {
       default: ''
+    },
+    sortType: {
+      type: Object
     }
   },
   setup(props, context: SetupContext) {
     return {
+      convertTime(time: number) {
+        return DateTips.toTimeMinuteStr(time)
+      },
       clicked() {
         context.emit('clicked', props.id)
       }

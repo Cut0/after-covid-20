@@ -5,7 +5,7 @@
           span.icon-wrapper.mr-4
             v-icon $notification
           span.icon-wrapper.mr-4
-            img(src="https://picsum.photos/200/300" alt="" loading="lazy")
+            img(:src="photoURL" alt="" loading="lazy")
         .notification-body
           v-list-item-title.notification-title {{title}}
           v-list-item-subtitle.notification-content {{content.replaceAll('\\n', '\n')}}
@@ -21,6 +21,9 @@ export default defineComponent({
     content: {
       type: String,
       default: ''
+    },
+    photoURL: {
+      type: String
     }
   }
 })

@@ -77,8 +77,8 @@ export default defineComponent({
       },
       ok() {
         if (!hasError.value) {
-          reset()
           ctx.emit('ok', { name: state.name, code: state.code })
+          reset()
         }
       },
       cancel() {

@@ -22,7 +22,7 @@ v-row(justify="center" no-gutters)
                   :rotate="-90"
                   :size="70"
                   :width="8"
-                  :value="currentUser.point%100"
+                  :value="currentUser.point%200"
                   color="#68B787") {{currentUser.level}}
               span.headline.ml-4 {{currentUser.petName}}
             character(

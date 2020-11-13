@@ -15,7 +15,6 @@ firebase.auth().onAuthStateChanged(user => {
       level: 0,
       point: 0,
       time: 0,
-      tmpTime: 0,
       isWorking: false,
       monthlyTime: 0,
       monthlyPoint: 0,
@@ -27,7 +26,7 @@ firebase.auth().onAuthStateChanged(user => {
       lastSitDate: new Date(),
       lastStandDate: new Date(),
       petPhotoURL:
-        'https://firebasestorage.googleapis.com/v0/b/after-covid-hack.appspot.com/o/0%2Fa%2Fimage.png?alt=media&token=a4cebd91-5867-46c2-a736-1e6ddd307f67'
+        'https://firebasestorage.googleapis.com/v0/b/after-covid-hack.appspot.com/o/0%2Fb%2Fimage.png?alt=media&token=6f9605bf-1661-4baf-a28a-7592e46d3d4a'
     }
     db.collection('users')
       .doc(user.uid)

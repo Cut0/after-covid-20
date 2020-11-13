@@ -85,19 +85,6 @@ export default () => {
       })
   }
 
-  async function getAll(sortkey = 'id') {
-    if (isLast || state.loading) return
-    state.loading = true
-    return await new UserModel()
-      .getAll(sortkey)
-      .then((res: any) => {
-        state.users.push(...res.data)
-      })
-      .finally(() => {
-        state.loading = false
-      })
-  }
-
   async function update(user: User) {
     if (state.loading) return
     return await new UserModel().update(user)
@@ -116,7 +103,6 @@ export default () => {
     reset,
     get,
     getList,
-    getAll,
     signInWithGoogle,
     signInWithTwitter,
     signInWithFacebook,

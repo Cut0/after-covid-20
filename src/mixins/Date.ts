@@ -28,6 +28,13 @@ function toTimeStr(sec: number) {
   return hours + ':' + minutes + ':' + seconds
 }
 
+function toTimeMinuteStr(min: number) {
+  const hours = Math.floor(min / 60).toString()
+  let minutes = Math.floor(min % 60).toString()
+  if (minutes.length < 2) minutes = '0' + minutes
+  return hours + '時間' + minutes + '分'
+}
+
 function dateDiff(endDate: Date, startDate: Date) {
   const diff = (endDate.getTime() - startDate.getTime()) / 1000
   return diff
@@ -41,5 +48,6 @@ export default {
   toTimeStr,
   dateDiff,
   FirstDateInYear,
-  LastDateInYear
+  LastDateInYear,
+  toTimeMinuteStr
 }
