@@ -17,49 +17,24 @@ v-row(justify="center" no-gutters)
       template(v-if="isLogin&&currentUser.isComplated")
         v-tabs-items(v-model="tabs.homeTab")
           v-tab-item(key="0")
-            v-row.my-6.mx-2(align="center")
-              v-progress-circular(
-                  :rotate="-90"
-                  :size="70"
-                  :width="8"
-                  :value="(currentUser.point%200)/2"
-                  color="#68B787") {{currentUser.level}}
-              span.headline.ml-4 {{currentUser.petName}}
-            character(
-              :photoURL="currentUser.petPhotoURL"
-              :isWorking="currentUser.isWorking"
-            )
-            v-row.my-6.mx-0(justify="center" align-content="center")
-              span.display-3(v-if="currentUser.isWorking") {{state.workingTime}}
-              span.display-3(v-else) 休憩中
+            character-tab(
+              :user="currentUser"
+              :workingTime="state.workingTime"
+              :showTime="true")
           v-tab-item(key="1")
             v-container.pl-3
               v-row.pl-3.my-2(align="center")
-                v-icon(v-if="state.chartType.key==='point'") $point
-                v-icon(v-if="state.chartType.key==='time'") $working
-                v-icon(v-if="state.chartType.key==='level'") $level
+                v-icon {{state.chartType.icon}}
                 span.title.ml-1 {{state.chartType.title}}の変動
               loading-circle(v-if="loading")
               template(v-else)
                 transition(
                   :chartData="monthlyChartLog"
-                  :options="state.options")
-    v-speed-dial.floating-action-button(
+                  :options="chart.options")
+    floating-button(
       v-if="tabs.homeTab===1"
-      v-model="state.fab" fixed bottom right transition="slide-y-reverse-transition")
-        template(v-slot:activator="")
-          v-btn(v-model="state.fab" :color="state.chartType.color" dark="" fab="")
-            v-icon(v-if="state.fab") $close
-            template(v-else)
-              v-icon(v-if="state.chartType.key==='point'") $point
-              v-icon(v-if="state.chartType.key==='time'") $working
-              v-icon(v-if="state.chartType.key==='level'") $level
-        v-btn(@click="setChartType({title:'経験値',key:'point',color:'#ff7f50',label:'経験値(ポイント)'})" fab='' dark='' small='' color='#ff7f50')
-          v-icon $point
-        v-btn(@click="setChartType({title:'労働時間',key:'time',color:'#4682b4',label:'労働時間(分)'})" fab='' dark='' small='' color='#4682b4')
-          v-icon $working
-        v-btn(@click="setChartType({title:'レベル',key:'level',color:'#2e8b57',label:'レベル(LV)'})" fab='' dark='' small='' color='#2e8b57')
-          v-icon $level
+      :params="chart.types"
+      @selected="setChartType")
 </template>
 <script lang="ts">
 import {
@@ -72,9 +47,10 @@ import UserComponent from '@/modules/firebase/user'
 import LogComponent from '@/modules/firebase/log'
 import GeneralCard from '@/components/cards/GeneralCard.vue'
 import RegisterCard from '@/components/cards/RegisterCard.vue'
+import FloatingButton from '@/components/FloatingButton.vue'
 import Transition from '@/components/graphs/SingleTransition.vue'
 import LoadingCircle from '@/components/LoadingCircle.vue'
-import Character from '@/components/canvas/Character.vue'
+import CharacterTab from '@/templates/CharacterTab.vue'
 import { DateTips, ToolTips } from '@/mixins'
 
 type Props = {
@@ -94,7 +70,8 @@ export default defineComponent({
     RegisterCard,
     Transition,
     LoadingCircle,
-    Character
+    CharacterTab,
+    FloatingButton
   },
   props: {
     tabs: {}
@@ -102,16 +79,7 @@ export default defineComponent({
   setup(props: Props, ctx: SetupContext) {
     const userComponent = UserComponent()
     const logComponent = LogComponent()
-    const state = reactive({
-      fab: false,
-      workingTime: '0:00:00',
-      chartType: {
-        title: '経験値',
-        key: 'point',
-        color: '#ff7f50',
-        label: '経験値(ポイント)'
-      },
-      logs: {},
+    const chart = reactive({
       options: {
         responsive: true,
         scales: {
@@ -134,7 +102,36 @@ export default defineComponent({
             bottom: 0
           }
         }
-      }
+      },
+      types: [
+        {
+          title: '経験値',
+          label: '経験値(ポイント)',
+          color: '#ff7f50',
+          key: 'point',
+          icon: '$point'
+        },
+        {
+          title: '労働時間',
+          label: '労働時間(分)',
+          color: '#4682b4',
+          key: 'time',
+          icon: '$working'
+        },
+        {
+          title: 'レベル',
+          label: 'レベル(Lv)',
+          color: '#2e8b57',
+          key: 'level',
+          icon: '$level'
+        }
+      ]
+    })
+
+    const state = reactive({
+      fab: false,
+      workingTime: '0:00:00',
+      chartType: chart.types[0]
     })
 
     async function setChartData() {
@@ -160,52 +157,45 @@ export default defineComponent({
       }, 1000)
     }
 
-    watch(userComponent.isLogin, async val => {
-      if (val) {
-        setChartData()
-        setTimer()
-      }
-    })
-    if (userComponent.isLogin) {
-      setTimer()
-      watch(
-        () => props.tabs.homeTab,
-        async val => {
-          if (val === 1) setChartData()
-        }
-      )
-      watch(
-        () => state.chartType,
-        async () => {
-          state.options.scales.yAxes[0].scaleLabel.labelString =
-            state.chartType.label
+    watch(
+      userComponent.isLogin,
+      val => {
+        if (val) {
           setChartData()
+          setTimer()
         }
-      )
-    }
+      },
+      { immediate: true }
+    )
+
+    watch(
+      () => props.tabs.homeTab,
+      async val => {
+        if (val === 1) setChartData()
+      }
+    )
 
     return {
       state,
+      chart,
       ...userComponent,
       ...logComponent,
       toConfig() {
         ToolTips.navigateTo(ctx, '/config')
       },
-      registerPet({ name, code }: { name: string; code: string }) {
+      registerPet({ name }: { name: string }) {
         const currentUser = userComponent.currentUser.value
         currentUser.petName = name
-        currentUser.petCode = code
         currentUser.isComplated = true
         userComponent.update(currentUser)
       },
-      setChartType(data: ChartType) {
-        state.chartType = data
+      setChartType(index: number) {
+        state.chartType = chart.types[index]
+        chart.options.scales.yAxes[0].scaleLabel.labelString =
+          chart.types[index].label
+        setChartData()
       }
     }
   }
 })
 </script>
-<style scoped lang="sass">
-.floating-action-button
-  margin-bottom: 64px
-</style>

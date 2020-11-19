@@ -7,13 +7,6 @@
             v-row
               v-col
                 v-text-field(
-                  v-model="state.code"
-                  label="クッションの認証コード"
-                  persistent-hint
-                  color="#68B787"
-                  :rules="[state.rules.required]"
-                  required)
-                v-text-field(
                   v-model="state.name"
                   label="クッションの名前"
                   persistent-hint
@@ -52,17 +45,16 @@ export default defineComponent({
   },
   setup(_, ctx: SetupContext) {
     const state = reactive({
-      code: null,
       name: null,
       rules: { required: (value: string) => !!value || '必須項目です' }
     })
-    const hasError = computed(() => !state.code || !state.name)
+    const hasError = computed(() => !state.name)
     return {
       state,
       hasError,
       ok() {
         if (!hasError.value) {
-          ctx.emit('ok', { name: state.name, code: state.code })
+          ctx.emit('ok', { name: state.name })
         }
       }
     }
