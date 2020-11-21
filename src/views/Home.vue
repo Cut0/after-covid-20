@@ -10,7 +10,7 @@ v-row(justify="center" no-gutters)
         @ok="toConfig")
       register-card(
         v-if="isLogin&&!currentUser.isComplated"
-        title="クッションを登録" 
+        title="キャラクターを登録" 
         content="これから一緒に働くパートナーです。しっかりと名前をつけてあげましょう"
         buttonName="登録"
         @ok="registerPet")
@@ -20,7 +20,8 @@ v-row(justify="center" no-gutters)
             character-tab(
               :user="currentUser"
               :workingTime="state.workingTime"
-              :showTime="true")
+              @startWork="startWork"
+              @finishWork="finishWork")
           v-tab-item(key="1")
             v-container.pl-3
               v-row.pl-3.my-2(align="center")
@@ -52,6 +53,7 @@ import Transition from '@/components/graphs/SingleTransition.vue'
 import LoadingCircle from '@/components/LoadingCircle.vue'
 import CharacterTab from '@/templates/CharacterTab.vue'
 import { DateTips, ToolTips } from '@/mixins'
+import { User } from '@/types'
 
 type Props = {
   tabs: { homeTab: number; rankingTab: number }
@@ -186,6 +188,12 @@ export default defineComponent({
         chart.options.scales.yAxes[0].scaleLabel.labelString =
           chart.table[index].label
         setChartData()
+      },
+      startWork() {
+        userComponent.startWork()
+      },
+      finishWork() {
+        userComponent.finishWork()
       }
     }
   }

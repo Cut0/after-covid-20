@@ -24,13 +24,13 @@
             v-if="$route.name==='ホーム'&&isLogin&&currentUser.isComplated"
             v-model="state.tabs.homeTab"
             fixed-tabs centered)
-            v-tab(key="0") クッション
+            v-tab(key="0") キャラクター
             v-tab(key="1") グラフ
           v-tabs(
             v-if="$route.name==='ユーザー'"
             v-model="state.tabs.userTab"
             fixed-tabs centered)
-            v-tab(key="0") クッション
+            v-tab(key="0") キャラクター
             v-tab(key="1") グラフ
           v-tabs(
             v-if="$route.name==='ランキング'"

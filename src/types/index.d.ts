@@ -2,7 +2,6 @@ export type User = {
   id: string
   photoURL: string | null
   displayName: string | null
-  petCode: string | null
   petName: string | null
   level: number
   point: number

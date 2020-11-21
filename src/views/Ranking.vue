@@ -97,7 +97,7 @@ export default defineComponent({
             type: 'point',
             title: '経験値',
             color: '#ff7f50',
-            key: 'montlyPoint',
+            key: 'monthlyPoint',
             icon: '$point'
           },
           {

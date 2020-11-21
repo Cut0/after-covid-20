@@ -11,7 +11,6 @@ firebase.auth().onAuthStateChanged(user => {
       id: user.uid,
       photoURL: user.photoURL,
       displayName: user.displayName,
-      petCode: null,
       petName: null,
       level: 0,
       point: 0,

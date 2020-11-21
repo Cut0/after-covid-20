@@ -1,5 +1,6 @@
 import * as firebase from 'firebase/app'
 import 'firebase/firestore'
+import { Log } from '@/types'
 
 export default class LogModel {
   db: firebase.firestore.Firestore
@@ -79,11 +80,12 @@ export default class LogModel {
         })
       })
   }
-  /*
+
   public async create(data: Log) {
     return this.db.collection('logs').add(data)
   }
 
+  /*
   public async update(data: Log) {
     return await this.db
       .collection('Logs')

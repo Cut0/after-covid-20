@@ -8,7 +8,7 @@
               v-col
                 v-text-field(
                   v-model="state.name"
-                  label="クッションの名前"
+                  label="キャラクターの名前"
                   persistent-hint
                   color="#68B787"
                   :rules="[state.rules.required]"

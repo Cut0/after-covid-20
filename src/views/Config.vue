@@ -19,7 +19,7 @@ v-row(no-gutters justify="center")
             v-list-item-icon
               v-icon $reset
             v-list-item-content
-              v-list-item-title クッションの再設定
+              v-list-item-title キャラクターの再設定
           v-list-item(
             v-if="isLogin"
             @click="$refs.logout.open()"
@@ -47,7 +47,7 @@ v-row(no-gutters justify="center")
         @ok="deleteUser")
       register-modal(
         ref="register"
-        title="クッションを再設定" 
+        title="キャラクターを再設定" 
         content="名前を変えちゃいます"
         buttonName="登録"
         @ok="registerPet"
@@ -95,10 +95,9 @@ export default defineComponent({
     return {
       state,
       ...userComponent,
-      registerPet({ name, code }: { name: string; code: string }) {
+      registerPet({ name }: { name: string }) {
         const currentUser = userComponent.currentUser.value
         currentUser.petName = name
-        currentUser.petCode = code
         currentUser.isComplated = true
         userComponent.update(currentUser)
       },

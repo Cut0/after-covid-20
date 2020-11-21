@@ -37,6 +37,10 @@ export default () => {
     return await new LogModel().remove(id)
   }
 
+  async function create(log: Log) {
+    return await new LogModel().create(log)
+  }
+
   type ChartType = {
     title: string
     key: string
@@ -84,6 +88,7 @@ export default () => {
 
   return {
     ...toRefs(state),
+    create,
     getList,
     reset,
     remove,

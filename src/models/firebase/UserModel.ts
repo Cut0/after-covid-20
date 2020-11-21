@@ -71,10 +71,11 @@ export default class UserModel {
   }
 
   public async update(user: User) {
-    return this.db
+    await this.db
       .collection('users')
       .doc(user.id)
       .update(user)
+    return user
   }
 
   public async remove(id: string) {
