@@ -10,7 +10,7 @@ firebase.auth().onAuthStateChanged(async user => {
     const userComponent = UserComponent()
     await userComponent.get(user.uid)
     const currentUser = userComponent.user.value
-    if (currentUser) store.dispatch('setUser', user)
+    if (currentUser) store.dispatch('setUser', currentUser)
     else {
       const now = new Date()
       const userData: User = {

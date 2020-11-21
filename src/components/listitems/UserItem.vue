@@ -3,20 +3,20 @@
       @click="clicked" 
       max-width="598")
       v-list-item-icon(v-if="showRank")
-        v-list-item-title.mx-4 {{rank}}
-        v-avatar(size="48").mx-4
+        v-list-item-title.mx-2 {{rank}}
+        v-avatar(size="48").ml-4
           v-img(:src="img" alt="ユーザープロフィール" loading="lazy")
       v-list-item-content
         v-list-item-title {{name}}
-      v-list-item-action.mx-4(v-if="isTime")
+      v-list-item-action(v-if="isTime")
         span {{convertTime(content)}}
-      v-list-item-action.mx-4(v-else)
-        span {{content}}
+      v-list-item-action(v-else)
+        span {{content.toFixed(1)}}
 </template>
 
 <script lang="ts">
 import { DateTips } from '@/mixins'
-import { SetupContext, defineComponent, reactive } from '@vue/composition-api'
+import { SetupContext, defineComponent } from '@vue/composition-api'
 export default defineComponent({
   props: {
     showRank: {

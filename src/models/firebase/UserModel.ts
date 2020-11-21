@@ -1,6 +1,6 @@
 import * as firebase from 'firebase/app'
-import 'firebase/auth'
 import 'firebase/firestore'
+import 'firebase/auth'
 import { User } from '@/types'
 import store from '@/store'
 
@@ -72,6 +72,7 @@ export default class UserModel {
   }
 
   public async update(user: User) {
+    console.log(user)
     await this.db
       .collection('users')
       .doc(user.id)

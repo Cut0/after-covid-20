@@ -133,8 +133,10 @@ export default () => {
       'https://firebasestorage.googleapis.com/v0/b/after-covid-hack.appspot.com/o/20%2Fb%2Fimage.png?alt=media&token=fd93c018-a599-4a0a-90bc-fa9701cdaabd',
       'https://firebasestorage.googleapis.com/v0/b/after-covid-hack.appspot.com/o/25%2Fb%2Fimage.png?alt=media&token=b785faec-b4ae-49e0-aa76-f5fc8c5cd35e'
     ]
-    user.petPhotoURL =
-      images[Math.floor(user.level / 10) >= 5 ? 5 : Math.floor(user.level / 10)]
+    let pos = Math.floor(user.level / 10)
+    if (pos < 0) pos = 0
+    if (pos > 5) pos = 5
+    user.petPhotoURL = images[pos]
     await update(user)
     const logComponent = LogComponent()
     return await logComponent.create({
