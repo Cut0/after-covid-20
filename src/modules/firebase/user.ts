@@ -67,6 +67,10 @@ export default () => {
     return new UserModel().currentData()
   }
 
+  async function create(user: User) {
+    return new UserModel().create(user)
+  }
+
   async function get(uid: string) {
     if (state.loading) return
     return await new UserModel().get(uid).then((res: any) => {
@@ -147,6 +151,7 @@ export default () => {
     isLogin: computed(() => isLogin()),
     currentUser: computed(() => currentUser()),
     reset,
+    create,
     get,
     getList,
     signInWithGoogle,
