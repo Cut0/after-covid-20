@@ -10,8 +10,8 @@ v-row(justify="center" no-gutters)
             v-tab-item(key="1")
               v-container.pl-3
                 v-row.pl-3.my-2(align="center")
-                  v-icon {{state.chartType.icon}}
-                  span.title.ml-1 {{state.chartType.title}}の変動
+                  v-icon {{state.chartParams.icon}}
+                  span.title.ml-1 {{state.chartParams.title}}の変動
                 loading-circle(v-if="loading")
                 template(v-else)
                   transition(
@@ -22,8 +22,8 @@ v-row(justify="center" no-gutters)
           span.ma-4 データが存在しません
     floating-button(
       v-if="tabs.userTab===1"
-      :params="chart.types"
-      @selected="setChartType")
+      :params="chart.table"
+      @selected="setChartParams")
 </template>
 <script lang="ts">
 import { reactive, defineComponent, SetupContext } from '@vue/composition-api'
@@ -37,13 +37,6 @@ import { DateTips } from '@/mixins'
 
 type Props = {
   tabs: { userTab: number; rankingTab: number }
-}
-
-type ChartType = {
-  title: string
-  key: string
-  color: string
-  label: string
 }
 
 export default defineComponent({
@@ -83,7 +76,7 @@ export default defineComponent({
           }
         }
       },
-      types: [
+      table: [
         {
           title: '経験値',
           label: '経験値(ポイント)',
@@ -110,7 +103,7 @@ export default defineComponent({
 
     const state = reactive({
       workingTime: '0:00:00',
-      chartType: chart.types[0]
+      chartParams: chart.table[0]
     })
 
     const uid = ctx.root.$route.params.id as string
@@ -123,7 +116,7 @@ export default defineComponent({
         startDate,
         endDate
       })
-      logComponent.formatForChart(uid, state.chartType)
+      logComponent.formatForChart(uid, state.chartParams)
     }
 
     userComponent.get(uid).then(() => {
@@ -144,17 +137,13 @@ export default defineComponent({
       chart,
       ...userComponent,
       ...logComponent,
-      setChartType(index: number) {
-        state.chartType = chart.types[index]
+      setChartParams(index: number) {
+        state.chartParams = chart.table[index]
         chart.options.scales.yAxes[0].scaleLabel.labelString =
-          chart.types[index].label
+          chart.table[index].label
         setChartData()
       }
     }
   }
 })
 </script>
-<style scoped lang="sass">
-.floating-action-button
-  margin-bottom: 64px
-</style>

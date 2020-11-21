@@ -8,7 +8,7 @@
           v-img(:src="img" alt="ユーザープロフィール" loading="lazy")
       v-list-item-content
         v-list-item-title {{name}}
-      v-list-item-action.mx-4(v-if="sortType.name==='time'")
+      v-list-item-action.mx-4(v-if="isTime")
         span {{convertTime(content)}}
       v-list-item-action.mx-4(v-else)
         span {{content}}
@@ -40,8 +40,8 @@ export default defineComponent({
     content: {
       default: ''
     },
-    sortType: {
-      type: Object
+    isTime: {
+      type: Boolean
     }
   },
   setup(props, context: SetupContext) {

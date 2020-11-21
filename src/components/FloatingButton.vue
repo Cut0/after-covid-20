@@ -13,7 +13,13 @@ v-speed-dial.floating-action-button(
 </template>
 <script lang="ts">
 import { defineComponent, reactive, SetupContext } from '@vue/composition-api'
-type Props = { params: { icon: string; key: string; color: string }[] }
+type Props = {
+  params: {
+    icon: string
+    key: string
+    color: string
+  }[]
+}
 export default defineComponent({
   props: {
     params: { type: Array }

@@ -7,34 +7,20 @@ v-row(justify="center" no-gutters)
         :key="index")
         v-container.pl-3.pb-0.mb-0
           v-row.pl-3.my-2(align="center")
-            v-icon(v-if="state.sortType.name==='point'") $point
-            v-icon(v-if="state.sortType.name==='time'") $working
-            span.title.ml-1 {{state.sortType.title}}ランキング
+            v-icon {{state.sortParams.icon}}
+            span.title.ml-1 {{state.sortParams.title}}ランキング
         loading-circle(v-if="loading")
         template(v-else)
           user-list(
             :showRank="true"
             :userData="users"
-            :sortType="state.sortType"
-            :contentKey="state.contentKey"
+            :sortType="state.sortParams.type"
+            :contentKey="state.sortParams.key"
             color="#68B787"
             @clickedItem="toUser")
-    v-speed-dial.floating-action-button(
-      v-model="state.fab" fixed bottom right transition="slide-y-reverse-transition")
-        template(v-slot:activator="")
-          v-btn(
-            v-model="state.fab" 
-            :color="state.sortType.color" 
-            dark="" fab="")
-            v-icon(v-if="state.fab") $close
-            template(v-else)
-              v-icon(v-if="state.sortType.name==='point'") $point
-              v-icon(v-if="state.sortType.name==='time'") $working
-        v-btn(@click="setSortType({title:'経験値',name:'point',color:'#ff7f50'})" 
-        fab='' dark='' small='' color='#ff7f50')
-          v-icon $point
-        v-btn(@click="setSortType({title:'労働時間',name:'time',color:'#4682b4'})" fab='' dark='' small='' color='#4682b4')
-          v-icon $working
+    floating-button(
+      :params="sort.buttonParams"
+      @selected="setSortParams")
 </template>
 
 <script lang="ts">
@@ -46,60 +32,112 @@ import {
 } from '@vue/composition-api'
 import LoadingCircle from '@/components/LoadingCircle.vue'
 import UserList from '@/templates/UserList.vue'
+import FloatingButton from '@/components/FloatingButton.vue'
 import UserComponent from '@/modules/firebase/user'
 import { ToolTips } from '@/mixins'
 import _ from 'lodash'
 type Props = {
   tabs: { homeTab: number; rankingTab: number }
 }
-type SortType = {
-  title: string
-  name: string
-  color: string
-}
-
 export default defineComponent({
-  components: { LoadingCircle, UserList },
+  components: { LoadingCircle, UserList, FloatingButton },
   props: {
     tabs: {}
   },
   setup(props: Props, ctx: SetupContext) {
     const userComponent = UserComponent()
-    const fields: {
-      [key: string]: {
-        key: string
-      }
-    }[] = [
-      {
-        time: { key: 'dailyTime' },
-        point: { key: 'dailyPoint' }
-      },
-      {
-        time: { key: 'weeklyTime' },
-        point: { key: 'weeklyPoint' }
-      },
-      {
-        time: { key: 'monthlyTime' },
-        point: { key: 'monthlyPoint' }
-      },
-      {
-        time: { key: 'time' },
-        point: { key: 'point' }
-      }
-    ]
+    const sort = reactive({
+      buttonParams: [
+        {
+          key: 'point',
+          color: '#ff7f50',
+          icon: '$point'
+        },
+        {
+          key: 'time',
+          color: '#4682b4',
+          icon: '$working'
+        }
+      ],
+      table: [
+        [
+          {
+            type: 'point',
+            title: '経験値',
+            color: '#ff7f50',
+            key: 'dailyPoint',
+            icon: '$point'
+          },
+          {
+            type: 'time',
+            title: '労働時間',
+            color: '#4682b4',
+            key: 'dailyTime',
+            icon: '$working'
+          }
+        ],
+        [
+          {
+            type: 'point',
+            title: '経験値',
+            color: '#ff7f50',
+            key: 'weeklyPoint',
+            icon: '$point'
+          },
+          {
+            type: 'time',
+            title: '労働時間',
+            color: '#4682b4',
+            key: 'weeklyTime',
+            icon: '$working'
+          }
+        ],
+        [
+          {
+            type: 'point',
+            title: '経験値',
+            color: '#ff7f50',
+            key: 'montlyPoint',
+            icon: '$point'
+          },
+          {
+            type: 'time',
+            title: '労働時間',
+            color: '#4682b4',
+            key: 'monthlyTime',
+            icon: '$working'
+          }
+        ],
+        [
+          {
+            type: 'point',
+            title: '経験値',
+            color: '#ff7f50',
+            key: 'point',
+            icon: '$point'
+          },
+          {
+            type: 'time',
+            title: '労働時間',
+            color: '#4682b4',
+            key: 'time',
+            icon: '$working'
+          }
+        ]
+      ]
+    })
     const state = reactive({
-      contentKey: 'dailyTime',
-      sortType: { title: '経験値', name: 'point', color: '#ff7f50' },
-      fav: false
+      sortParams: sort.table[0][0],
+      currentButtonIndex: 0
     })
 
     function setRanknigData() {
-      const field = fields[props.tabs.rankingTab][state.sortType.name]
-      state.contentKey = field.key
-      userComponent.getList(field.key)
+      state.sortParams =
+        sort.table[props.tabs.rankingTab][state.currentButtonIndex]
+      userComponent.getList(state.sortParams.key)
     }
     watch(
-      () => [props.tabs.rankingTab, state.sortType],
+      () => props.tabs.rankingTab,
       () => userComponent.reset()
     )
     watch(
@@ -109,27 +147,20 @@ export default defineComponent({
       }, 100),
       { immediate: true }
     )
-    watch(
-      () => state.sortType,
-      _.debounce(function() {
-        setRanknigData()
-      }, 100)
-    )
 
     return {
       state,
+      sort,
       ...userComponent,
       toUser(id: string) {
         ToolTips.navigateTo(ctx, '/' + id)
       },
-      setSortType(type: SortType) {
-        state.sortType = type
+      setSortParams(index: number) {
+        userComponent.reset()
+        state.currentButtonIndex = index
+        setRanknigData()
       }
     }
   }
 })
 </script>
-<style scoped lang="sass">
-.floating-action-button
-  margin-bottom: 64px
-</style>

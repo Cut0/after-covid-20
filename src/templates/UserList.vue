@@ -9,7 +9,7 @@
         :img="el.photoURL"
         :rank="index+1"
         :content="el[contentKey]"
-        :sortType="sortType"
+        :isTime="sortType==='time'"
         @clicked="clickedItem")
 </template>
 
@@ -36,7 +36,7 @@ export default defineComponent({
       default: 'id'
     },
     sortType: {
-      type: Object
+      type: String
     }
   },
   setup(_, ctx: SetupContext) {
